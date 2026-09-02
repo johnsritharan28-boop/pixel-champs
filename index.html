@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pixel Champs — V36 Cloud Sync</title>
+<title>Pixel Champs — Arcade</title>
 <style>
   *{box-sizing:border-box}
   :root{--bg1:#070b1f;--bg2:#15134a;--panel:#111735;--panel2:#171d43;--line:#3b4380;--purple:#8b5cf6;--pink:#ff4f9a;--cyan:#22d3ee;--gold:#fbbf24}
@@ -31,28 +31,55 @@
   #target{position:absolute;width:68px;height:68px;border-radius:50%;display:none;background:radial-gradient(circle,#fff 0 12%,#ff4f9a 13% 45%,#7d4cff 46% 100%);box-shadow:0 0 25px #ff4f9a,0 0 55px rgba(255,79,154,.55);cursor:pointer;touch-action:manipulation}
   #startOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px}.score{font-size:48px;font-weight:1000}.small{opacity:.75;font-size:13px}.security{margin-top:16px;padding:15px;background:rgba(16,23,53,.8);border:1px solid #303765;border-radius:18px;font-size:12px;line-height:1.5}
 
-  /* 777 Slots — high-energy arcade presentation */
-  #slots .hero{background:linear-gradient(145deg,#24104f 0%,#68268d 52%,#b42d7b 100%);box-shadow:0 18px 45px rgba(168,85,247,.24)}
-  #slots .hero h1{font-size:34px;text-shadow:0 3px 18px rgba(0,0,0,.22)}
-  #slots .hero>div:first-child{font-size:50px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25));animation:float777 2.4s ease-in-out infinite}
-  #slots .hero .pill{background:rgba(12,10,35,.32);border-color:rgba(255,255,255,.2)}
-  #slots .card[style*="border:2px solid #7c3aed"]{background:linear-gradient(180deg,#24124d,#0b0820)!important;border:2px solid #7c3aed!important;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 20px 45px rgba(76,29,149,.3),inset 0 0 40px rgba(139,92,246,.08)!important}
-  #slots .slotReel{height:88px;background:linear-gradient(180deg,#ffffff 0%,#f1f3f8 52%,#d6d9e3 100%);color:#15152b;border-radius:12px;font-size:39px;box-shadow:inset 0 0 0 3px #73788d,0 5px 12px rgba(0,0,0,.35);text-shadow:0 2px 3px rgba(0,0,0,.15);transform:translateZ(0)}
-  #slots .slotBet{background:linear-gradient(145deg,#303765,#252b59);color:#fff;border:1px solid #686ca3;padding:14px 8px;border-radius:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-  #slots .slotBet.active{background:linear-gradient(145deg,#b05cff,#7c3aed);border-color:#f5d0fe;box-shadow:0 0 0 2px rgba(245,208,254,.12),0 0 22px rgba(168,85,247,.62);transform:translateY(-2px)}
-  #slotSpin{background:linear-gradient(135deg,#ffd34e,#f59e0b 55%,#f97316)!important;color:#21132f!important;box-shadow:0 12px 28px rgba(245,158,11,.28),inset 0 1px 0 rgba(255,255,255,.4);letter-spacing:.3px}
-  #slotSpin:hover{box-shadow:0 16px 35px rgba(245,158,11,.4),inset 0 1px 0 rgba(255,255,255,.5)}
-  #slotWin{font-size:19px!important;min-height:30px;text-shadow:0 0 16px rgba(255,255,255,.12)}
+  /* 777 Slots — premium neon arcade redesign */
+  #slots{padding-bottom:24px}
+  #slots .hero{background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.18),transparent 24%),linear-gradient(145deg,#10052b 0%,#3a0f66 48%,#d02d82 100%);border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 55px rgba(114,42,180,.34),inset 0 1px 0 rgba(255,255,255,.12);padding:25px 22px 22px}
+  #slots .hero h1{font-size:38px;letter-spacing:-1.2px;text-shadow:0 4px 20px rgba(0,0,0,.35)}
+  #slots .hero p{font-size:16px;line-height:1.4;max-width:340px}
+  #slots .hero>div:first-child{font-size:58px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));animation:float777 2.2s ease-in-out infinite}
+  #slots .hero .pill{background:rgba(5,3,20,.38);border-color:rgba(255,255,255,.2);padding:10px 14px;font-size:14px}
+  #slots .slotMachine{background:linear-gradient(180deg,#07040f,#160b2f 52%,#08040f);border:2px solid #f4a11a;border-radius:24px;padding:12px;box-shadow:0 0 0 3px rgba(139,92,246,.25),0 22px 55px rgba(0,0,0,.42),inset 0 0 35px rgba(139,92,246,.16)}
+  #slots .reelWindow{background:#05030d;border:2px solid #8b5cf6;border-radius:18px;padding:9px;box-shadow:0 0 28px rgba(139,92,246,.28),inset 0 0 18px rgba(0,0,0,.8)}
+  #slots .slotReel{height:102px;background:linear-gradient(180deg,#fff 0%,#f6f7fb 45%,#d7dbe6 100%);color:#15152b;border-radius:13px;font-size:44px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 3px #74798c,0 6px 15px rgba(0,0,0,.4);text-shadow:0 2px 4px rgba(0,0,0,.16)}
+  #slots .jackpotMeter{margin:11px 0 0;background:linear-gradient(90deg,#25104a,#4a145e,#25104a);border:1px solid rgba(255,199,60,.35);border-radius:14px;padding:9px 12px;text-align:center;font-size:12px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+  #slots .jackpotMeter strong{display:block;color:#ffd34e;font-size:21px;letter-spacing:.5px;text-shadow:0 0 14px rgba(255,211,78,.4)}
+  #slots .slotStatus{min-height:34px;text-align:center;margin:13px 0 10px;font-weight:950;font-size:18px}
+  #slots .slotBet{background:linear-gradient(145deg,#202653,#141832);color:#fff;border:1px solid #596198;padding:15px 8px;border-radius:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.2)}
+  #slots .slotBet.active{background:linear-gradient(145deg,#c05cff,#6d28d9);border-color:#f5d0fe;box-shadow:0 0 0 2px rgba(245,208,254,.14),0 0 25px rgba(168,85,247,.7);transform:translateY(-2px)}
+  #slotSpin{background:linear-gradient(135deg,#ffe16a 0%,#ffb11b 48%,#ff6b18 100%)!important;color:#21132f!important;box-shadow:0 14px 35px rgba(245,158,11,.38),inset 0 1px 0 rgba(255,255,255,.55);letter-spacing:.8px;font-size:22px!important;padding:18px!important;position:relative;overflow:hidden}
+  #slotSpin:after{content:"";position:absolute;top:-30%;left:-30%;width:35%;height:160%;background:rgba(255,255,255,.28);transform:rotate(20deg);transition:left .45s ease}
+  #slotSpin:hover:after{left:110%}
+  #slots .featureRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  #slots .featureStat{background:linear-gradient(145deg,#191e49,#0d1230);border:1px solid rgba(118,125,190,.35);border-radius:14px;padding:10px 7px;text-align:center}
+  #slots .featureStat b{display:block;font-size:16px}.featureStat span{font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.6px}
+  #slots .paytable{margin-top:12px;background:linear-gradient(145deg,#171c42,#0d1028);border:1px solid rgba(118,125,190,.35);border-radius:20px;padding:15px}
+  #slots .paytableTitle{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:950}
+  #slots .payline{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+  #slots .payline:last-child{border-bottom:0}
+  #slots .payline b{color:#ffd34e}
+  #slots .responsibleNote{margin-top:10px;text-align:center;font-size:11px;opacity:.6}
   @keyframes slotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-  @keyframes float777{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+  @keyframes float777{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
   .slotWin{animation:slotPulse .5s ease}
-  @media (max-width:380px){main{padding:13px}.slotReel{height:76px;font-size:32px}.hero{padding:20px}}
+  @media (max-width:380px){main{padding:13px}.slotReel{height:84px;font-size:36px}.hero{padding:20px}}
+
+  /* V42 production game shell */
+  body{background:radial-gradient(circle at 20% 0%,rgba(125,76,255,.18),transparent 28%),#070a18}
+  .homeHero{background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.16),transparent 22%),linear-gradient(145deg,#1b1550,#6d28d9 52%,#ec4899);padding:28px 20px 22px;text-align:center;border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 55px rgba(76,29,149,.3)}
+  .homeHero h1{font-size:38px;letter-spacing:-1.5px;margin:8px 0;text-shadow:0 4px 18px rgba(0,0,0,.3)}
+  .homeBadge{display:inline-block;font-size:11px;font-weight:950;letter-spacing:1px;padding:8px 10px;border-radius:999px;background:rgba(5,3,20,.28);border:1px solid rgba(255,255,255,.2)}
+  .homeActions{display:grid;grid-template-columns:1.25fr .75fr;gap:10px;margin-top:18px}.secondaryPlay{background:#182044;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:16px;font-weight:950;padding:15px}
+  .homeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.homeTile{min-height:108px;text-align:left;color:#fff;background:linear-gradient(145deg,#171d45,#0e1330);border:1px solid #353e78;border-radius:18px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,.2)}.homeTile>b{display:block;font-size:15px;margin-top:9px}.homeTile>span{display:block;font-size:11px;opacity:.68;margin-top:4px}.homeTile:first-letter{font-size:25px}.slotsTile{background:linear-gradient(145deg,#32106b,#b52d83);border-color:#a855f7}
+  .moreFeatures{margin:10px 0 14px;background:#0d1230;border:1px solid #2f376d;border-radius:18px;padding:12px}.moreFeatures summary{font-weight:950;cursor:pointer;padding:5px}.moreGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.moreGrid button{background:#171d45;color:#fff;border:1px solid #343d76;border-radius:12px;padding:12px;font-weight:800}
+  .bottomNav{position:sticky;bottom:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;padding:7px;border-radius:18px;background:rgba(9,12,30,.92);backdrop-filter:blur(10px);border:1px solid #303765;z-index:20}.bottomNav button{background:transparent;color:#fff;border:0;padding:8px 4px;font-size:18px}.bottomNav span{display:block;font-size:10px;opacity:.7;margin-top:2px}
+  .progressCard{margin-top:12px}
+
 </style>
 <script>window.addEventListener("error",function(e){if(e&&e.target&&e.target.tagName==="SCRIPT"&&/supabase-js/.test(e.target.src)){window.__supabaseUnavailable=true;}} ,true);</script>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">⚡ PIXEL CHAMPS</div><div class="pill">Prototype</div></header>
+<header><div class="logo">⚡ PIXEL CHAMPS</div><div class="pill">LIVE</div></header>
 <main>
   <div id="missionReward" style="display:none;position:fixed;left:10px;right:10px;bottom:18px;z-index:101;padding:16px;border-radius:16px;background:#303765;color:#fff;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.25)">
   <div style="font-size:30px">🎉</div><b id="missionRewardTitle">Mission Complete!</b>
@@ -67,83 +94,90 @@
 
 <div id="petToast" style="display:none;position:fixed;left:10px;right:10px;top:12px;z-index:99;padding:14px;border-radius:14px;background:#303765;color:#fff;text-align:center;font-weight:800"></div>
 <section id="home">
-    <div class="hero">
-      <h1>Quick Tap ⚡</h1>
-      <p>Tap the targets as fast as you can in 30 seconds.</p>
-      <button class="play" id="playBtn" type="button" onclick="document.getElementById('home').style.display='none';document.getElementById('map').style.display='block';">PLAY NOW</button>
+  <div class="hero homeHero">
+    <div class="homeBadge">⚡ SKILL • COLLECT • LEVEL UP</div>
+    <h1>PIXEL CHAMPS</h1>
+    <p>Tap. Play. Win. Become the ultimate Pixel Champ.</p>
+    <div class="homeActions">
+      <button class="play" id="playBtn" type="button">PLAY</button>
+      <button class="secondaryPlay" id="arcadeBtnHub" type="button">🕹️ ARCADE</button>
     </div>
-    <div class="stats">
-      <div class="card"><div class="label">BEST SCORE</div><div class="value" id="best">0</div></div>
-      <div class="card"><div class="label">VIRTUAL COINS</div><div class="value" id="coins">0</div></div>
+  </div>
+  <div class="stats">
+    <div class="card"><div class="label">BEST SCORE</div><div class="value" id="best">0</div></div>
+    <div class="card"><div class="label">VIRTUAL COINS</div><div class="value" id="coins">0</div></div>
+  </div>
+  <div class="card progressCard">
+    <div style="display:flex;justify-content:space-between"><b>⭐ LEVEL <span id="level">1</span></b><span class="small"><span id="xp">0</span>/100 XP</span></div>
+    <div style="height:10px;background:#303765;border-radius:10px;margin-top:10px;overflow:hidden"><div id="xpbar" style="height:100%;width:0%;background:#ffcf33;border-radius:10px"></div></div>
+  </div>
+  <div class="homeGrid">
+    <button id="slotsBtn" type="button" class="homeTile slotsTile">🎰<b>777 SLOTS</b><span>Virtual coins</span></button>
+    <button id="lobbyBtn" class="homeTile">🎮<b>GAME LOBBY</b><span>Choose a challenge</span></button>
+    <button id="collectionBtn" class="homeTile">🎒<b>COLLECTION</b><span>Pets & badges</span></button>
+    <button id="dailyBtn" class="homeTile">🎁<b>DAILY REWARD</b><span>Claim today's gift</span></button>
+    <button id="profileBtn" class="homeTile">👤<b>PROFILE</b><span>Progress & trophies</span></button>
+    <button id="customizeBtn" class="homeTile">🎨<b>CHAMP STUDIO</b><span>Customize your Champ</span></button>
+  </div>
+  <details class="moreFeatures">
+    <summary>MORE PIXEL CHAMPS</summary>
+    <div class="moreGrid">
+      <button id="missionsBtn">🎯 Missions</button><button id="progressionBtn">🗺️ Roadmap</button>
+      <button id="rewardsBtn">🎁 Season Rewards</button><button id="tournamentsBtn">🏆 Championships</button>
+      <button id="petPowerBtn">✨ Pet Powers</button><button id="petshopBtn">🐾 Pet Lab</button>
+      <button id="questsBtn">🎯 Daily Quests</button><button id="statsBtn">📊 Player Stats</button>
+      <button id="inventoryBtn">🎒 Inventory</button><button id="accountBtn">☁️ Player Account</button>
+      <button id="safetyBtn">🛡️ Family Safety</button><button id="securityBtn">🔐 Security</button>
+      <button id="arcadeBtnMini">🕹️ Mini-Game Arcade</button><button id="launchBtn">🚀 Release Center</button>
     </div>
-    <div class="card" style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between"><b>⭐ Level <span id="level">1</span></b><span class="small"><span id="xp">0</span>/100 XP</span></div>
-      <div style="height:10px;background:#303765;border-radius:10px;margin-top:10px;overflow:hidden"><div id="xpbar" style="height:100%;width:0%;background:#ffcf33;border-radius:10px"></div></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <button id="petsBtn" class="card" style="color:#fff">🐾 PETS<br><span class="small">Collect & care</span></button>
-      <button id="dailyBtn" class="card" style="color:#fff">🎁 DAILY<br><span class="small">Claim reward</span></button>
-      <button id="achBtn" class="card" style="color:#fff">🏆 BADGES<br><span class="small">Achievements</span></button>
-    </div>
-    <button id="slotsBtn" type="button" onclick="openSlots()" class="card" style="width:100%;color:#fff;margin-bottom:12px;background:linear-gradient(145deg,#5b21b6,#ec4899);border:1px solid #a855f7">🎰 777 SLOTS<br><span class="small">Spin for virtual coins</span></button>
-    <button id="arcadeBtnHub" class="card" style="width:100%;color:#fff;margin-bottom:12px">🕹️ ARCADE<br><span class="small">Play mini-games</span></button>
-    <button id="lobbyBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎮 GAME LOBBY<br><span class="small">Start playing</span></button>
-<button id="collectionBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎒 MY COLLECTION<br><span class="small">Pets, cosmetics & badges</span></button>
-    <button id="missionsBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎯 NEXT MISSIONS<br><span class="small">Your next goals</span></button>
-    <button id="progressionBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🗺️ UNLOCK ROADMAP<br><span class="small">See your next rewards</span></button>
-    <button id="customizeBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎨 CHAMP STUDIO<br><span class="small">Customize your Champ</span></button>
-    <button id="rewardsBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎁 SEASON REWARDS<br><span class="small">Milestones & badges</span></button>
-    <button id="profileBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">👤 PLAYER PROFILE<br><span class="small">Your progress & badges</span></button>
-    <button id="tournamentsBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🏆 CHAMPIONSHIPS<br><span class="small">Season leaderboard</span></button>
-    <button id="petPowerBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">✨ PET POWERS<br><span class="small">See your pet bonus</span></button>
-    <button id="petshopBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🐾 PET LAB<br><span class="small">Collect companions</span></button>
-    <button id="questsBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎯 DAILY QUESTS<br><span class="small">Today's challenges</span></button>
-    <button id="launchBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🚀 LAUNCH CENTER<br><span class="small">Release readiness</span></button>
-    <button id="securityBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🔐 SECURITY CENTER<br><span class="small">Safety & protection</span></button>
-    <button id="statsBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">📊 PLAYER STATS<br><span class="small">Progress overview</span></button>
-    <button id="inventoryBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎒 MY COLLECTION<br><span class="small">Items, pets & badges</span></button>
-    <button id="accountBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">👤 PLAYER ACCOUNT<br><span class="small">Sign in & cloud-save demo</span></button>
-    <button id="safetyBtn" class="card" style="width:100%;color:#fff;margin-bottom:12px">🛡️ FAMILY SAFETY<br><span class="small">Parent & safety tools</span></button>
-    <button id="arcadeBtnMini" class="card" style="width:100%;color:#fff;margin-bottom:12px">🎮 MINI-GAME ARCADE<br><span class="small">Choose your challenge</span></button>
-    <div class="security">
-      🔒 <b>Prototype safety:</b> no real-money deposits, withdrawals, purchases, or chat are connected. Scores and coins are local test data.
-    </div>
-  </section>
+  </details>
+  <nav class="bottomNav" aria-label="Main navigation">
+    <button type="button" onclick="showSection('home')">🏠<span>Home</span></button>
+    <button type="button" id="navCharacters">🧑‍🎤<span>Champs</span></button>
+    <button type="button" id="navPets">🐾<span>Pets</span></button>
+    <button type="button" id="navProfile">👤<span>Profile</span></button>
+  </nav>
+</section>
 
   <section id="slots" style="display:none">
-    <div class="hero" style="background:linear-gradient(145deg,#1d174b,#7c2d92);position:relative;overflow:hidden">
-      <div style="font-size:40px">🎰</div>
+    <div class="hero">
+      <div>🎰</div>
       <h1>777 Slots</h1>
-      <p>🔥 Hit SPIN. Chase the big combo. Build your coin stack. Pure virtual arcade fun.</p>
+      <p>🔥 Spin the reels. Chase the jackpot. Build your virtual coin stack.</p>
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
         <div class="pill">🪙 <span id="slotBalance">0</span></div>
         <div class="pill">🏆 JACKPOT <span id="slotJackpot">2500</span></div>
       </div>
     </div>
-    <div class="card" style="background:linear-gradient(180deg,#20154b,#120d2d);border:2px solid #7c3aed;padding:12px">
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:#08051b;padding:8px;border-radius:16px;border:2px solid #f59e0b;box-shadow:0 0 22px rgba(168,85,247,.35)">
-        <div class="slotReel" id="slot0">🍒</div><div class="slotReel" id="slot1">🍋</div><div class="slotReel" id="slot2">7️⃣</div><div class="slotReel" id="slot3">🍒</div><div class="slotReel" id="slot4">⭐</div>
+    <div class="slotMachine">
+      <div class="reelWindow">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+          <div class="slotReel" id="slot0">🍒</div><div class="slotReel" id="slot1">🍋</div><div class="slotReel" id="slot2">7️⃣</div><div class="slotReel" id="slot3">🍒</div><div class="slotReel" id="slot4">⭐</div>
+        </div>
       </div>
-      <div id="slotWin" style="min-height:30px;text-align:center;margin:12px 0;font-weight:900;font-size:18px">Pick your bet. Feel the rush. 🔥</div>
+      <div class="jackpotMeter">Grand prize <strong>🏆 2,500 VIRTUAL COINS</strong></div>
+      <div id="slotWin" class="slotStatus">Pick your bet. Hit SPIN. 🔥</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
         <button class="slotBet" data-bet="10">10</button><button class="slotBet" data-bet="25">25</button><button class="slotBet" data-bet="50">50</button>
       </div>
-      <button id="slotSpin" style="width:100%;background:#f59e0b;color:#1f1235;font-size:20px;padding:16px;border-radius:16px">🎰 SPIN</button>
-      <div class="small" style="text-align:center;margin-top:9px">Virtual coins only • Results are generated locally for this prototype.</div>
-    </div>
-    <div class="card" style="margin-top:10px">
-      <b>🏆 Paytable</b>
-      <div class="small" style="display:grid;gap:5px;margin-top:8px">
-        <span>7️⃣ 7️⃣ 7️⃣ 7️⃣ 7️⃣ — 50× bet (JACKPOT)</span>
-        <span>💎 💎 💎 💎 💎 — 20× bet</span>
-        <span>⭐ ⭐ ⭐ ⭐ ⭐ — 10× bet</span>
-        <span>🍒 🍒 🍒 — 5× bet</span>
-        <span>Any 2 matching symbols — 2× bet</span>
+      <button id="slotSpin" style="width:100%;border-radius:17px">🎰 SPIN NOW</button>
+      <div class="featureRow">
+        <div class="featureStat"><b id="slotSpins">0</b><span>Spins</span></div>
+        <div class="featureStat"><b id="slotLastWin">—</b><span>Last win</span></div>
+        <div class="featureStat"><b id="slotBestWin">—</b><span>Best win</span></div>
       </div>
+      <div class="small" style="text-align:center;margin-top:11px">Virtual coins only • Virtual-coin arcade results.</div>
     </div>
-    <button id="slotsHome" style="margin-top:12px;width:100%;background:#303765;color:#fff">HOME</button>
+    <div class="paytable">
+      <div class="paytableTitle"><span>🏆 PAYTABLE</span><span style="font-size:12px;opacity:.6">5 reels</span></div>
+      <div class="payline"><span>7️⃣ 7️⃣ 7️⃣ 7️⃣ 7️⃣</span><b>50× BET</b></div>
+      <div class="payline"><span>💎 💎 💎 💎 💎</span><b>20× BET</b></div>
+      <div class="payline"><span>⭐ ⭐ ⭐ ⭐ ⭐</span><b>10× BET</b></div>
+      <div class="payline"><span>🍒 🍒 🍒 + any 2</span><b>5× BET</b></div>
+      <div class="responsibleNote">No real-money wagering, deposits, withdrawals, or cash-out.</div>
+    </div>
+    <button id="slotsHome" style="margin-top:12px;width:100%;background:#303765;color:#fff">← BACK TO PIXEL CHAMPS</button>
   </section>
-
   <section id="arcadeHub" style="display:none">
   <div class="hero" style="background:linear-gradient(145deg,#ff4f9a,#22c7ff)">
     <div style="font-size:42px">🕹️</div><h1>Arcade Hub</h1><p>Pick a game, set your challenge, and beat your best.</p>
@@ -282,16 +316,16 @@
 
 <section id="launch" style="display:none">
   <div class="hero" style="background:linear-gradient(145deg,#18b77a,#7d4cff)">
-    <h1>Launch Center 🚀</h1><p>Pixel Champs is being prepared for mobile release.</p>
+    <h1>Launch Center 🚀</h1><p>Pixel Champs mobile release status</p>
   </div>
   <div style="display:grid;gap:10px">
-    <div class="card"><b>🎮 Game systems</b><br><span class="small">Mini-games, XP, pets, inventory and achievements — prototype ready.</span></div>
-    <div class="card"><b>☁️ Online foundation</b><br><span class="small">Development account and backend integration prepared.</span></div>
+    <div class="card"><b>🎮 Game systems</b><br><span class="small">Mini-games, XP, pets, inventory and achievements — ready.</span></div>
+    <div class="card"><b>☁️ Online foundation</b><br><span class="small">Cloud account and backend foundation prepared.</span></div>
     <div class="card"><b>🛡️ Safety</b><br><span class="small">Family Safety and Security Center are included; production review is still required.</span></div>
-    <div class="card"><b>📱 Mobile release</b><br><span class="small">App Store/Google Play packaging is the next technical stage.</span></div>
+    <div class="card"><b>📱 Mobile release</b><br><span class="small">Mobile app packaging is prepared for App Store and Google Play builds.</span></div>
     <div class="card"><b>💰 Monetization</b><br><span class="small">Disabled. No wagering, cash prizes, withdrawals or real-money purchases.</span></div>
   </div>
-  <div class="security" style="margin-top:12px">💡 No paid service is required for this prototype stage.</div>
+  <div class="security" style="margin-top:12px">💡 No paid service is required for this build stage.</div>
   <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="launchHome">HOME</button>
 </section>
 
@@ -327,13 +361,13 @@
 <section id="account" style="display:none">
   <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#22c7ff)">
     <h1>Player Account 👤</h1>
-    <p>Development account demo. No real payments.</p>
+    <p>Player account. No real payments.</p>
   </div>
   <div class="card" id="syncStatus"><b>☁️ Cloud Sync</b><br><span class="small" id="syncText">Not connected</span></div>
   <div class="card">
     <div class="label">USERNAME</div>
     <div class="value" id="accountName">Guest</div>
-    <div class="small" id="accountStatus">Local prototype mode</div>
+    <div class="small" id="accountStatus">Local mode</div>
   </div>
   <div style="display:grid;gap:10px;margin-top:12px">
     <input id="usernameInput" placeholder="Email address" maxlength="120" autocomplete="email" style="padding:14px;border-radius:12px;border:0">
@@ -353,10 +387,10 @@
     <p>Safety tools for parents and guardians.</p>
   </div>
   <div style="display:grid;gap:12px">
-    <div class="card"><b>🕒 Play-time reminders</b><br><span class="small">Prototype setting — no device restrictions are applied.</span></div>
-    <div class="card"><b>💬 Social features</b><br><span class="small">Chat is not enabled in this prototype.</span></div>
+    <div class="card"><b>🕒 Play-time reminders</b><br><span class="small">Play-time reminder setting — device restrictions are not applied.</span></div>
+    <div class="card"><b>💬 Social features</b><br><span class="small">Chat is not enabled in this build.</span></div>
     <div class="card"><b>💳 Purchases</b><br><span class="small">Real-money purchases are disabled.</span></div>
-    <div class="card"><b>🔒 Privacy</b><br><span class="small">This prototype stores progress locally; the development backend is separate.</span></div>
+    <div class="card"><b>🔒 Privacy</b><br><span class="small">This production stores progress locally; the cloud backend is separate.</span></div>
     <div class="card"><b>🚩 Report / Block</b><br><span class="small">Planned for the production version before social features launch.</span></div>
   </div>
   <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="safetyHome">HOME</button>
@@ -431,7 +465,7 @@
   <div class="card" style="text-align:center">
     <div style="font-size:55px">🎁</div>
     <div class="value">+100 Coins</div>
-    <p class="small">One virtual reward per day in this prototype.</p>
+    <p class="small">One virtual reward per day in this build.</p>
     <button class="play" id="claimDaily">CLAIM REWARD</button>
   </div>
   <p id="dailyStatus" class="small" style="text-align:center;margin-top:12px"></p>
@@ -446,8 +480,8 @@
   <div class="card" style="margin-bottom:12px;text-align:center">
     <div style="font-size:46px">🌟</div>
     <div class="label">YOUR JOURNEY</div>
-    <div class="value">Level 1</div>
-    <div class="small">0 / 100 XP</div>
+    <div class="value">Level <span id="mapLevel">1</span></div>
+    <div class="small"><span id="mapXP">0</span> / 100 XP</div>
   </div>
   <div style="display:grid;gap:12px">
     <button type="button" onclick="document.getElementById('map').style.display='none';document.getElementById('character').style.display='block';" id="mapQuick" class="card" style="color:#fff;text-align:left;border:2px solid #ff4f9a">
@@ -464,7 +498,7 @@
     </button>
   </div>
   <div class="security">
-    🛡️ <b>Safe progression:</b> rewards in this prototype are virtual only. No gambling, cash prizes, or purchases are enabled.
+    🛡️ <b>Safe progression:</b> rewards are virtual only. No gambling, cash prizes, or purchases are enabled.
   </div>
   <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="mapHome">HOME</button>
 </section>
@@ -481,7 +515,7 @@
     <button class="card" data-champ="Zed" style="color:#fff;text-align:center;border:2px solid #62d96b">🧑‍🚀<br><b>Zed</b><br><span class="small">Balance</span></button>
   </div>
   <div class="security">
-    🔒 <b>Account safety:</b> character choices are cosmetic in this prototype. No payment information or personal information is collected.
+    🔒 <b>Account safety:</b> character choices are cosmetic. No payment information or personal information is collected.
   </div>
   <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="backHome">BACK HOME</button>
 </section>
@@ -521,7 +555,7 @@ let xp=Number(localStorage.getItem("pc_xp")||0),level=Number(localStorage.getIte
 let pet=localStorage.getItem("pc_pet")||"None";
 function refreshProgress(){
   $("best").textContent=best; $("coins").textContent=coins; $("xp").textContent=xp; $("level").textContent=level;
-  $("xpbar").style.width=(xp%100)+"%"; $("selectedPet").textContent=pet;
+  $("xpbar").style.width=(xp%100)+"%"; $("selectedPet").textContent=pet; if($("mapLevel")) $("mapLevel").textContent=level; if($("mapXP")) $("mapXP").textContent=xp;
 }
 refreshProgress();
 
@@ -1069,6 +1103,9 @@ $("target").addEventListener("click",()=>{
 $("againBtn").onclick=startGame;
 $("homeBtn").onclick=()=>{clearInterval(timer);running=false;showSection("home");};
 $("mapHome").onclick=()=>showSection("home");
+$("navCharacters").onclick=()=>{showSection("character")};
+$("navPets").onclick=()=>{showSection("petshop");if(typeof renderPetShop==="function")renderPetShop()};
+$("navProfile").onclick=()=>{showSection("profile");if(typeof renderProfile==="function")renderProfile()};
 const SUPABASE_URL="https://nswadoscsvbzxvxbrxzv.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_qgVkhRy6qDuQpJHbTSAc4Q_mdHVEC2J";
 // V36 cloud layer: authentication plus a complete per-player game-state snapshot.
@@ -1189,7 +1226,7 @@ async function refreshCloud(){
 }
 function setAccount(user,token,refresh){
   accountUser=user||"Guest";setCloudTokens(token||"",refresh||"");localStorage.setItem("pc_user",accountUser);
-  $("accountName").textContent=accountUser;$("accountStatus").textContent=token?"Secure Supabase account":"Local prototype mode";refreshCloud();
+  $("accountName").textContent=accountUser;$("accountStatus").textContent=token?"Secure Supabase account":"Local mode";refreshCloud();
 }
 $("accountBtn").onclick=()=>{$("home").style.display="none";$("account").style.display="block";$("accountMsg").textContent=""};
 $("accountHome").onclick=()=>{$("account").style.display="none";$("home").style.display="block"};
@@ -1227,6 +1264,7 @@ refreshCloud();
 <!-- PIXEL_CHAMPS_V41: slot odds tuned so losses are common and jackpots are rare. -->
 
 <script>
+// V42 production build: game-first mobile shell and virtual-coin arcade.
 // V38: virtual-coin 777 slot machine. Real-money deposits, wagers and cash-outs are intentionally disabled.
 (function(){
   function openSlots(){
@@ -1241,11 +1279,13 @@ refreshCloud();
 
   const symbols=['🍒','🍋','🔔','⭐','💎','7️⃣'];
   let bet=10, spinning=false;
+  let slotSpins=Number(localStorage.getItem('pc_slot_spins')||0);
+  let slotBestWin=Number(localStorage.getItem('pc_slot_best_win')||0);
   // Balanced reel odds: each symbol is equally likely.
   // A matching pair is NOT a win; players need a real 3+ match.
   const weights=[1,1,1,1,1,1];
   function pick(){let n=Math.random()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<symbols.length;i++){n-=weights[i];if(n<=0)return symbols[i]}return symbols[0]}
-  function setBalance(){const b=document.getElementById('slotBalance');if(b)b.textContent=coins}
+  function setBalance(){const b=document.getElementById('slotBalance');if(b)b.textContent=coins; const sp=document.getElementById('slotSpins'); if(sp)sp.textContent=slotSpins; const bw=document.getElementById('slotBestWin'); if(bw)bw.textContent=slotBestWin?('+'+slotBestWin):'—'}
   function setBet(v){bet=v;document.querySelectorAll('.slotBet').forEach(x=>x.classList.toggle('active',Number(x.dataset.bet)===bet))}
   function payout(reels){
     const counts={}; reels.forEach(x=>counts[x]=(counts[x]||0)+1);
@@ -1282,9 +1322,9 @@ refreshCloud();
   function spin(){
     if(spinning)return;
     if(coins<bet){document.getElementById('slotWin').textContent='Not enough virtual coins. Play games to earn more.';return}
-    spinning=true;coins-=bet;localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();
+    spinning=true;slotSpins++;localStorage.setItem('pc_slot_spins',slotSpins);coins-=bet;localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();
     const win=document.getElementById('slotWin');win.textContent='🎰 Spinning...';
-    let ticks=0;const iv=setInterval(()=>{render([pick(),pick(),pick(),pick(),pick()]);ticks++;if(ticks>=10){clearInterval(iv);const reels=makeResult();render(reels);const mult=payout(reels);const prize=bet*mult;if(prize){coins+=prize;win.textContent=mult>=50?'💰 JACKPOT! +'+prize+' virtual coins!':'🎉 WIN! +'+prize+' virtual coins!';}else{win.textContent='No win this spin — try again!'}localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();queueCloudSave();if(authToken&&typeof syncProfileToCloud==='function')syncProfileToCloud().catch(()=>{});spinning=false}},90)
+    let ticks=0;const iv=setInterval(()=>{render([pick(),pick(),pick(),pick(),pick()]);ticks++;if(ticks>=10){clearInterval(iv);const reels=makeResult();render(reels);const mult=payout(reels);const prize=bet*mult;if(prize){coins+=prize;if(prize>slotBestWin){slotBestWin=prize;localStorage.setItem('pc_slot_best_win',slotBestWin)}const lw=document.getElementById('slotLastWin');if(lw)lw.textContent='+'+prize;win.textContent=mult>=50?'💰 JACKPOT! +'+prize+' virtual coins!':'🎉 WIN! +'+prize+' virtual coins!';}else{const lw=document.getElementById('slotLastWin');if(lw)lw.textContent='—';win.textContent='No win this spin — try again!'}localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();queueCloudSave();if(authToken&&typeof syncProfileToCloud==='function')syncProfileToCloud().catch(()=>{});spinning=false}},90)
   }
   document.addEventListener('DOMContentLoaded',function(){
     const btn=document.getElementById('slotsBtn');if(btn)btn.onclick=openSlots;
