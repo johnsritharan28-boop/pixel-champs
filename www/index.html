@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pixel Champs — Arcade</title>
+<style>
+  *{box-sizing:border-box}
+  :root{--bg1:#070b1f;--bg2:#15134a;--panel:#111735;--panel2:#171d43;--line:#3b4380;--purple:#8b5cf6;--pink:#ff4f9a;--cyan:#22d3ee;--gold:#fbbf24}
+  html{background:#070b1f;scroll-behavior:smooth}
+  body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 15% 10%,rgba(139,92,246,.35),transparent 30%),radial-gradient(circle at 85% 20%,rgba(34,211,238,.22),transparent 28%),linear-gradient(135deg,#070b1f,#1a1250 55%,#090d27);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden}
+  body:before,body:after{content:"";position:fixed;width:260px;height:260px;border-radius:50%;filter:blur(70px);opacity:.18;pointer-events:none;z-index:-1}
+  body:before{background:#ff4f9a;top:8%;left:-100px} body:after{background:#22d3ee;right:-100px;bottom:8%}
+  .app{width:min(430px,96vw);background:rgba(7,11,31,.86);border:1px solid rgba(139,92,246,.55);border-radius:30px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 50px rgba(124,58,237,.16);backdrop-filter:blur(18px)}
+  header{padding:20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(37,43,96,.9),rgba(21,27,66,.92));border-bottom:1px solid rgba(139,92,246,.2);position:relative}
+  header:after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,#8b5cf6,transparent);opacity:.8}
+  .logo{font-weight:950;font-size:22px;letter-spacing:.2px;text-shadow:0 0 18px rgba(255,255,255,.16)}
+  .pill{background:linear-gradient(135deg,#29326d,#202754);border:1px solid rgba(139,92,246,.28);border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.18)}
+  main{padding:18px}
+  .hero{background:linear-gradient(135deg,#ff9d2e 0%,#ff4f81 52%,#8b5cf6 100%);border-radius:24px;padding:24px;margin-bottom:16px;box-shadow:0 16px 35px rgba(255,79,129,.2);position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-65px;top:-70px;background:rgba(255,255,255,.16);filter:blur(2px)}
+  .hero h1{margin:0 0 7px;font-size:30px;line-height:1.05;letter-spacing:-.8px}.hero p{margin:0 0 18px;opacity:.94;line-height:1.35;font-weight:650}
+  button{border:0;border-radius:16px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+  button:hover{transform:translateY(-2px);filter:brightness(1.06)} button:active{transform:scale(.98)}
+  .play{background:linear-gradient(180deg,#fff,#f3f4ff);color:#25204c;width:100%;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .card{background:linear-gradient(145deg,rgba(25,31,72,.98),rgba(14,19,48,.98));border:1px solid rgba(76,79,136,.35);border-radius:20px;padding:15px;box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.03)}
+  .label{font-size:12px;opacity:.72;font-weight:750}.value{font-size:25px;font-weight:950;margin-top:4px}
+  #game{display:none}.gamebox{height:430px;background:radial-gradient(circle at 50% 45%,#151b48,#0c102c 70%);border-radius:22px;position:relative;overflow:hidden;border:1px solid #3d467f;box-shadow:inset 0 0 40px rgba(139,92,246,.08)}
+  .top{display:flex;justify-content:space-between;padding:13px;font-weight:850}.result{display:none;text-align:center;padding:22px;background:linear-gradient(145deg,#191f49,#101534);border-radius:20px;margin-top:16px;border:1px solid rgba(139,92,246,.28)}
+  #target{position:absolute;width:68px;height:68px;border-radius:50%;display:none;background:radial-gradient(circle,#fff 0 12%,#ff4f9a 13% 45%,#7d4cff 46% 100%);box-shadow:0 0 25px #ff4f9a,0 0 55px rgba(255,79,154,.55);cursor:pointer;touch-action:manipulation}
+  #startOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px}.score{font-size:48px;font-weight:1000}.small{opacity:.75;font-size:13px}.security{margin-top:16px;padding:15px;background:rgba(16,23,53,.8);border:1px solid #303765;border-radius:18px;font-size:12px;line-height:1.5}
+
+  /* 777 Slots — premium neon arcade redesign */
+  #slots{padding-bottom:24px}
+  #slots .hero{background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.18),transparent 24%),linear-gradient(145deg,#10052b 0%,#3a0f66 48%,#d02d82 100%);border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 55px rgba(114,42,180,.34),inset 0 1px 0 rgba(255,255,255,.12);padding:25px 22px 22px}
+  #slots .hero h1{font-size:38px;letter-spacing:-1.2px;text-shadow:0 4px 20px rgba(0,0,0,.35)}
+  #slots .hero p{font-size:16px;line-height:1.4;max-width:340px}
+  #slots .hero>div:first-child{font-size:58px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));animation:float777 2.2s ease-in-out infinite}
+  #slots .hero .pill{background:rgba(5,3,20,.38);border-color:rgba(255,255,255,.2);padding:10px 14px;font-size:14px}
+  #slots .slotMachine{background:linear-gradient(180deg,#07040f,#160b2f 52%,#08040f);border:2px solid #f4a11a;border-radius:24px;padding:12px;box-shadow:0 0 0 3px rgba(139,92,246,.25),0 22px 55px rgba(0,0,0,.42),inset 0 0 35px rgba(139,92,246,.16)}
+  #slots .reelWindow{background:#05030d;border:2px solid #8b5cf6;border-radius:18px;padding:9px;box-shadow:0 0 28px rgba(139,92,246,.28),inset 0 0 18px rgba(0,0,0,.8)}
+  #slots .slotReel{height:102px;background:linear-gradient(180deg,#fff 0%,#f6f7fb 45%,#d7dbe6 100%);color:#15152b;border-radius:13px;font-size:44px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 3px #74798c,0 6px 15px rgba(0,0,0,.4);text-shadow:0 2px 4px rgba(0,0,0,.16)}
+  #slots .jackpotMeter{margin:11px 0 0;background:linear-gradient(90deg,#25104a,#4a145e,#25104a);border:1px solid rgba(255,199,60,.35);border-radius:14px;padding:9px 12px;text-align:center;font-size:12px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+  #slots .jackpotMeter strong{display:block;color:#ffd34e;font-size:21px;letter-spacing:.5px;text-shadow:0 0 14px rgba(255,211,78,.4)}
+  #slots .slotStatus{min-height:34px;text-align:center;margin:13px 0 10px;font-weight:950;font-size:18px}
+  #slots .slotBet{background:linear-gradient(145deg,#202653,#141832);color:#fff;border:1px solid #596198;padding:15px 8px;border-radius:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.2)}
+  #slots .slotBet.active{background:linear-gradient(145deg,#c05cff,#6d28d9);border-color:#f5d0fe;box-shadow:0 0 0 2px rgba(245,208,254,.14),0 0 25px rgba(168,85,247,.7);transform:translateY(-2px)}
+  #slotSpin{background:linear-gradient(135deg,#ffe16a 0%,#ffb11b 48%,#ff6b18 100%)!important;color:#21132f!important;box-shadow:0 14px 35px rgba(245,158,11,.38),inset 0 1px 0 rgba(255,255,255,.55);letter-spacing:.8px;font-size:22px!important;padding:18px!important;position:relative;overflow:hidden}
+  #slotSpin:after{content:"";position:absolute;top:-30%;left:-30%;width:35%;height:160%;background:rgba(255,255,255,.28);transform:rotate(20deg);transition:left .45s ease}
+  #slotSpin:hover:after{left:110%}
+  #slots .featureRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  #slots .featureStat{background:linear-gradient(145deg,#191e49,#0d1230);border:1px solid rgba(118,125,190,.35);border-radius:14px;padding:10px 7px;text-align:center}
+  #slots .featureStat b{display:block;font-size:16px}.featureStat span{font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.6px}
+  #slots .paytable{margin-top:12px;background:linear-gradient(145deg,#171c42,#0d1028);border:1px solid rgba(118,125,190,.35);border-radius:20px;padding:15px}
+  #slots .paytableTitle{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:950}
+  #slots .payline{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+  #slots .payline:last-child{border-bottom:0}
+  #slots .payline b{color:#ffd34e}
+  #slots .responsibleNote{margin-top:10px;text-align:center;font-size:11px;opacity:.6}
+  @keyframes slotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+  @keyframes float777{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+  .slotWin{animation:slotPulse .5s ease}
+  @media (max-width:380px){main{padding:13px}.slotReel{height:84px;font-size:36px}.hero{padding:20px}}
+
+  /* V42 production game shell */
+  body{background:radial-gradient(circle at 20% 0%,rgba(125,76,255,.18),transparent 28%),#070a18}
+  .homeHero{background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.16),transparent 22%),linear-gradient(145deg,#1b1550,#6d28d9 52%,#ec4899);padding:28px 20px 22px;text-align:center;border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 55px rgba(76,29,149,.3)}
+  .homeHero h1{font-size:38px;letter-spacing:-1.5px;margin:8px 0;text-shadow:0 4px 18px rgba(0,0,0,.3)}
+  .homeBadge{display:inline-block;font-size:11px;font-weight:950;letter-spacing:1px;padding:8px 10px;border-radius:999px;background:rgba(5,3,20,.28);border:1px solid rgba(255,255,255,.2)}
+  .homeActions{display:grid;grid-template-columns:1.25fr .75fr;gap:10px;margin-top:18px}.secondaryPlay{background:#182044;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:16px;font-weight:950;padding:15px}
+  .homeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.homeTile{min-height:108px;text-align:left;color:#fff;background:linear-gradient(145deg,#171d45,#0e1330);border:1px solid #353e78;border-radius:18px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,.2)}.homeTile>b{display:block;font-size:15px;margin-top:9px}.homeTile>span{display:block;font-size:11px;opacity:.68;margin-top:4px}.homeTile:first-letter{font-size:25px}.slotsTile{background:linear-gradient(145deg,#32106b,#b52d83);border-color:#a855f7}
+  .moreFeatures{margin:10px 0 14px;background:#0d1230;border:1px solid #2f376d;border-radius:18px;padding:12px}.moreFeatures summary{font-weight:950;cursor:pointer;padding:5px}.moreGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.moreGrid button{background:#171d45;color:#fff;border:1px solid #343d76;border-radius:12px;padding:12px;font-weight:800}
+  .bottomNav{position:sticky;bottom:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;padding:7px;border-radius:18px;background:rgba(9,12,30,.92);backdrop-filter:blur(10px);border:1px solid #303765;z-index:20}.bottomNav button{background:transparent;color:#fff;border:0;padding:8px 4px;font-size:18px}.bottomNav span{display:block;font-size:10px;opacity:.7;margin-top:2px}
+  .progressCard{margin-top:12px}
+
+</style>
+<script>window.addEventListener("error",function(e){if(e&&e.target&&e.target.tagName==="SCRIPT"&&/supabase-js/.test(e.target.src)){window.__supabaseUnavailable=true;}} ,true);</script>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">⚡ PIXEL CHAMPS</div><div class="pill">LIVE</div></header>
+<main>
+  <div id="missionReward" style="display:none;position:fixed;left:10px;right:10px;bottom:18px;z-index:101;padding:16px;border-radius:16px;background:#303765;color:#fff;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.25)">
+  <div style="font-size:30px">🎉</div><b id="missionRewardTitle">Mission Complete!</b>
+  <div class="small" id="missionRewardText"></div>
+  <button id="missionRewardBtn" style="margin-top:10px;width:100%;background:#18b77a;color:#fff">CLAIM</button>
+</div>
+
+<div id="rewardClaim" style="display:none;position:fixed;left:10px;right:10px;bottom:18px;z-index:100;padding:16px;border-radius:16px;background:#303765;color:#fff;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.25)">
+  <div style="font-size:30px">🎉</div><b id="rewardClaimTitle">Reward Unlocked!</b><div class="small" id="rewardClaimText"></div>
+  <button id="rewardClaimBtn" style="margin-top:10px;width:100%;background:#18b77a;color:#fff">COLLECT</button>
+</div>
+
+<div id="petToast" style="display:none;position:fixed;left:10px;right:10px;top:12px;z-index:99;padding:14px;border-radius:14px;background:#303765;color:#fff;text-align:center;font-weight:800"></div>
+<section id="home">
+  <div class="hero homeHero">
+    <div class="homeBadge">⚡ SKILL • COLLECT • LEVEL UP</div>
+    <h1>PIXEL CHAMPS</h1>
+    <p>Tap. Play. Win. Become the ultimate Pixel Champ.</p>
+    <div class="homeActions">
+      <button class="play" id="playBtn" type="button">PLAY</button>
+      <button class="secondaryPlay" id="arcadeBtnHub" type="button">🕹️ ARCADE</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="card"><div class="label">BEST SCORE</div><div class="value" id="best">0</div></div>
+    <div class="card"><div class="label">VIRTUAL COINS</div><div class="value" id="coins">0</div></div>
+  </div>
+  <div class="card progressCard">
+    <div style="display:flex;justify-content:space-between"><b>⭐ LEVEL <span id="level">1</span></b><span class="small"><span id="xp">0</span>/100 XP</span></div>
+    <div style="height:10px;background:#303765;border-radius:10px;margin-top:10px;overflow:hidden"><div id="xpbar" style="height:100%;width:0%;background:#ffcf33;border-radius:10px"></div></div>
+  </div>
+  <div class="homeGrid">
+    <button id="slotsBtn" type="button" class="homeTile slotsTile">🎰<b>777 SLOTS</b><span>Virtual coins</span></button>
+    <button id="lobbyBtn" class="homeTile">🎮<b>GAME LOBBY</b><span>Choose a challenge</span></button>
+    <button id="collectionBtn" class="homeTile">🎒<b>COLLECTION</b><span>Pets & badges</span></button>
+    <button id="dailyBtn" class="homeTile">🎁<b>DAILY REWARD</b><span>Claim today's gift</span></button>
+    <button id="profileBtn" class="homeTile">👤<b>PROFILE</b><span>Progress & trophies</span></button>
+    <button id="customizeBtn" class="homeTile">🎨<b>CHAMP STUDIO</b><span>Customize your Champ</span></button>
+  </div>
+  <details class="moreFeatures">
+    <summary>MORE PIXEL CHAMPS</summary>
+    <div class="moreGrid">
+      <button id="missionsBtn">🎯 Missions</button><button id="progressionBtn">🗺️ Roadmap</button>
+      <button id="rewardsBtn">🎁 Season Rewards</button><button id="tournamentsBtn">🏆 Championships</button>
+      <button id="petPowerBtn">✨ Pet Powers</button><button id="petshopBtn">🐾 Pet Lab</button>
+      <button id="questsBtn">🎯 Daily Quests</button><button id="statsBtn">📊 Player Stats</button>
+      <button id="inventoryBtn">🎒 Inventory</button><button id="accountBtn">☁️ Player Account</button>
+      <button id="safetyBtn">🛡️ Family Safety</button><button id="securityBtn">🔐 Security</button>
+      <button id="arcadeBtnMini">🕹️ Mini-Game Arcade</button><button id="launchBtn">🚀 Release Center</button>
+    </div>
+  </details>
+  <nav class="bottomNav" aria-label="Main navigation">
+    <button type="button" onclick="showSection('home')">🏠<span>Home</span></button>
+    <button type="button" id="navCharacters">🧑‍🎤<span>Champs</span></button>
+    <button type="button" id="navPets">🐾<span>Pets</span></button>
+    <button type="button" id="navProfile">👤<span>Profile</span></button>
+  </nav>
+</section>
+
+  <section id="slots" style="display:none">
+    <div class="hero">
+      <div>🎰</div>
+      <h1>777 Slots</h1>
+      <p>🔥 Spin the reels. Chase the jackpot. Build your virtual coin stack.</p>
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+        <div class="pill">🪙 <span id="slotBalance">0</span></div>
+        <div class="pill">🏆 JACKPOT <span id="slotJackpot">2500</span></div>
+      </div>
+    </div>
+    <div class="slotMachine">
+      <div class="reelWindow">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+          <div class="slotReel" id="slot0">🍒</div><div class="slotReel" id="slot1">🍋</div><div class="slotReel" id="slot2">7️⃣</div><div class="slotReel" id="slot3">🍒</div><div class="slotReel" id="slot4">⭐</div>
+        </div>
+      </div>
+      <div class="jackpotMeter">Grand prize <strong>🏆 2,500 VIRTUAL COINS</strong></div>
+      <div id="slotWin" class="slotStatus">Pick your bet. Hit SPIN. 🔥</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+        <button class="slotBet" data-bet="10">10</button><button class="slotBet" data-bet="25">25</button><button class="slotBet" data-bet="50">50</button>
+      </div>
+      <button id="slotSpin" style="width:100%;border-radius:17px">🎰 SPIN NOW</button>
+      <div class="featureRow">
+        <div class="featureStat"><b id="slotSpins">0</b><span>Spins</span></div>
+        <div class="featureStat"><b id="slotLastWin">—</b><span>Last win</span></div>
+        <div class="featureStat"><b id="slotBestWin">—</b><span>Best win</span></div>
+      </div>
+      <div class="small" style="text-align:center;margin-top:11px">Virtual coins only • Virtual-coin arcade results.</div>
+    </div>
+    <div class="paytable">
+      <div class="paytableTitle"><span>🏆 PAYTABLE</span><span style="font-size:12px;opacity:.6">5 reels</span></div>
+      <div class="payline"><span>7️⃣ 7️⃣ 7️⃣ 7️⃣ 7️⃣</span><b>50× BET</b></div>
+      <div class="payline"><span>💎 💎 💎 💎 💎</span><b>20× BET</b></div>
+      <div class="payline"><span>⭐ ⭐ ⭐ ⭐ ⭐</span><b>10× BET</b></div>
+      <div class="payline"><span>🍒 🍒 🍒 + any 2</span><b>5× BET</b></div>
+      <div class="responsibleNote">No real-money wagering, deposits, withdrawals, or cash-out.</div>
+    </div>
+    <button id="slotsHome" style="margin-top:12px;width:100%;background:#303765;color:#fff">← BACK TO PIXEL CHAMPS</button>
+  </section>
+  <section id="arcadeHub" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ff4f9a,#22c7ff)">
+    <div style="font-size:42px">🕹️</div><h1>Arcade Hub</h1><p>Pick a game, set your challenge, and beat your best.</p>
+  </div>
+  <div id="arcadeCards" style="display:grid;gap:10px"></div>
+  <div class="card" style="margin-top:10px"><b>🌟 Daily Challenge</b><br><span class="small">Beat any game today to earn a bonus 20 XP. <span id="dailyStatusLegacy"></span></span><br><button id="dailyChallenge" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">PLAY A GAME</button></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="arcadeHubHome">HOME</button>
+</section>
+
+<section id="arcade" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ff4f9a,#7d4cff)">
+    <h1>Arcade 🎮</h1><p>Pick a quick skill game and earn virtual XP.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px"><b>⚡ Tap Rush</b><br><span class="small">Tap the target 15 times before time runs out.</span><br><button id="tapRushStart" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">START</button></div>
+  <div id="tapRush" class="card" style="display:none;text-align:center"><div id="tapTimer" style="font-size:28px;font-weight:900">10</div><div id="tapCount" style="font-size:24px">0 / 15</div><button id="tapTarget" style="font-size:44px;width:100%;height:130px;background:#ffcf33">🎯</button></div>
+  <div class="card" style="margin-top:10px"><b>🧠 Memory Match</b><br><span class="small">Match 4 pairs before the timer ends.</span><br><button id="memoryStartLegacy" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">START</button></div>
+  <div id="memoryGame" class="card" style="display:none;text-align:center"><div id="memoryTimer" style="font-size:26px;font-weight:900">30</div><div id="memoryBoard" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px"></div><div id="memoryStatus" class="small" style="margin-top:8px">Matches: 0 / 4</div></div>
+  <div class="card" style="margin-top:10px"><b>➕ Quick Math</b><br><span class="small">Solve 8 quick equations before time runs out.</span><br><button id="mathStart" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">START</button></div>
+  <div id="quickMath" class="card" style="display:none;text-align:center"><div id="mathTimer" style="font-size:26px;font-weight:900">30</div><div id="mathQuestion" style="font-size:28px;font-weight:900;margin:12px">?</div><div id="mathAnswers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div id="mathStatus" class="small" style="margin-top:8px">0 / 8</div></div>
+<button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="arcadeHomeLegacy">HOME</button>
+</section>
+
+<section id="lobby" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#22c7ff)">
+    <div style="font-size:48px">🎮</div><h1>Pixel Champs</h1><p>Welcome back, Champ!</p>
+  </div>
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+    <div><b id="lobbyName">Player</b><br><span class="small">Level <span id="lobbyLevel">1</span> • 🏆 <span id="lobbyPoints">0</span></span></div>
+    <div id="lobbyPet" style="font-size:38px">🐾</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+    <button class="card lobbyNav" data-target="tournaments">🏆<br><b>CHAMPIONSHIPS</b></button>
+    <button class="card lobbyNav" data-target="missions">🎯<br><b>MISSIONS</b></button>
+    <button class="card lobbyNav" data-target="collection">🎒<br><b>COLLECTION</b></button>
+    <button class="card lobbyNav" data-target="customize">🎨<br><b>STUDIO</b></button>
+  </div>
+  <div class="card" style="margin-top:10px"><b>🔥 Next Goal</b><br><span id="lobbyGoal" class="small">Loading...</span></div>
+  <button id="lobbyPlay" style="margin-top:10px;width:100%;background:#18b77a;color:#fff">▶ PLAY NOW</button>
+  <button id="lobbyHome" style="margin-top:8px;width:100%;background:#303765;color:#fff">BACK</button>
+</section>
+
+<section id="collection" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#18b77a)">
+    <h1>My Collection 🎒</h1><p>Everything you've unlocked in one place.</p>
+  </div>
+  <div class="card"><b>🐾 Pets</b><div id="collectionPets" class="small" style="margin-top:7px"></div></div>
+  <div class="card" style="margin-top:9px"><b>🎨 Cosmetics</b><div id="collectionCosmetics" class="small" style="margin-top:7px"></div></div>
+  <div class="card" style="margin-top:9px"><b>🏅 Badges</b><div id="collectionBadges" class="small" style="margin-top:7px"></div></div>
+  <div class="card" style="margin-top:9px"><b>🎁 Season Items</b><div id="collectionSeason" class="small" style="margin-top:7px"></div></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="collectionHome">HOME</button>
+</section>
+
+<section id="missions" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#18b77a,#ffcf33)">
+    <h1>Next Missions 🎯</h1><p>Simple goals to help you reach your next unlock.</p>
+  </div>
+  <div id="missionList" style="display:grid;gap:9px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="missionsHome">HOME</button>
+</section>
+
+<section id="progression" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#22c7ff,#ffcf33)">
+    <h1>Unlock Roadmap 🗺️</h1><p>See what you can earn as you play.</p>
+  </div>
+  <div class="card" style="text-align:center"><b>Level <span id="roadLevel">1</span></b><br><span class="small">XP: <span id="roadXP">0</span></span></div>
+  <div id="roadmapList" style="display:grid;gap:9px;margin-top:10px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="progressionHome">HOME</button>
+</section>
+
+<section id="customize" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#22c7ff,#7d4cff)">
+    <h1>Champ Studio 🎨</h1><p>Customize your Champ with virtual cosmetics.</p>
+  </div>
+  <div class="card" style="text-align:center">
+    <div id="avatarPreview" style="font-size:72px">🧑‍🚀</div>
+    <b id="avatarName">Pixel Champ</b>
+  </div>
+  <div id="cosmeticList" style="display:grid;gap:10px;margin-top:10px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="customizeHome">HOME</button>
+</section>
+
+<section id="seasonrewards" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ffcf33,#ff7a4d)">
+    <h1>Season Rewards 🎁</h1><p>Reach virtual milestones and collect badges.</p>
+  </div>
+  <div id="rewardList" style="display:grid;gap:10px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="rewardsHome">HOME</button>
+</section>
+
+<section id="profile" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#18b77a,#22c7ff)">
+    <h1>Player Profile 👤</h1><p>Your Pixel Champs identity and season progress.</p>
+  </div>
+  <div class="card"><b id="profileName">Player</b><br><span class="small">⭐ Level <span id="profileLevel">1</span> • 🏆 <span id="profileSeason">0</span> season points</span></div>
+  <div class="card" style="margin-top:10px"><b>Badges</b><br><span id="profileBadges" class="small">No badges yet</span><div id="missionBadges" class="small" style="margin-top:6px"></div></div>
+  <div class="card" style="margin-top:10px"><b>Equipped Pet</b><br><span id="profilePet" class="small">None</span></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="profileHome">HOME</button>
+</section>
+
+<section id="tournaments" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ffcf33,#7d4cff)">
+    <h1>Championships 🏆</h1><p>Compete for virtual points and badges.</p>
+  </div>
+  <div class="card"><b>Season 1 • Star Sprint</b><br><span class="small">Earn points by playing mini-games. No entry fee.</span></div>
+  <div id="leaderboard" style="display:grid;gap:8px;margin-top:10px"></div>
+  <div class="card" style="margin-top:10px"><b>Your Season Points:</b> <span id="seasonPoints">0</span></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="tournamentsHome">HOME</button>
+</section>
+
+<section id="petbonus" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#ff4f9a)">
+    <h1>Pet Powers ✨</h1><p>Equip a companion to get a small, fun gameplay bonus.</p>
+  </div>
+  <div id="petPowerList" style="display:grid;gap:10px"></div>
+  <div class="card" style="margin-top:12px"><b>How it works</b><br><span class="small">Bonuses are virtual gameplay effects only. They cannot be exchanged for money.</span></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="petPowerHome">HOME</button>
+</section>
+
+<section id="petshop" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ff7a4d,#ff4f9a)">
+    <h1>Pet Lab 🐾</h1><p>Use virtual coins to unlock cosmetic companions.</p>
+  </div>
+  <div id="petOptions" style="display:grid;gap:10px"></div>
+  <div class="card" style="margin-top:12px;text-align:center">🪙 Coins: <b id="petCoins">0</b></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="petShopHome">HOME</button>
+</section>
+
+<section id="quests" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ff4f9a,#ffcf33)">
+    <h1>Daily Quests 🎯</h1><p>Complete small challenges and earn virtual XP.</p>
+  </div>
+  <div id="questList" style="display:grid;gap:10px"></div>
+  <div class="card" style="margin-top:12px;text-align:center">🔥 Streak: <b id="streakValue">0</b> days</div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="questsHome">HOME</button>
+</section>
+
+<section id="launch" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#18b77a,#7d4cff)">
+    <h1>Launch Center 🚀</h1><p>Pixel Champs mobile release status</p>
+  </div>
+  <div style="display:grid;gap:10px">
+    <div class="card"><b>🎮 Game systems</b><br><span class="small">Mini-games, XP, pets, inventory and achievements — ready.</span></div>
+    <div class="card"><b>☁️ Online foundation</b><br><span class="small">Cloud account and backend foundation prepared.</span></div>
+    <div class="card"><b>🛡️ Safety</b><br><span class="small">Family Safety and Security Center are included; production review is still required.</span></div>
+    <div class="card"><b>📱 Mobile release</b><br><span class="small">Mobile app packaging is prepared for App Store and Google Play builds.</span></div>
+    <div class="card"><b>💰 Monetization</b><br><span class="small">Disabled. No wagering, cash prizes, withdrawals or real-money purchases.</span></div>
+  </div>
+  <div class="security" style="margin-top:12px">💡 No paid service is required for this build stage.</div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="launchHome">HOME</button>
+</section>
+
+<section id="security" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#303765,#7d4cff)">
+    <h1>Security Center 🔐</h1><p>How Pixel Champs protects player progress.</p>
+  </div>
+  <div style="display:grid;gap:10px">
+    <div class="card"><b>🛡️ Server-authoritative data</b><br><span class="small">Production scores, XP, inventory and balances should be validated on the server.</span></div>
+    <div class="card"><b>🔑 Account protection</b><br><span class="small">Production accounts should use strong authentication, secure sessions and MFA for administrators.</span></div>
+    <div class="card"><b>🚫 No client trust</b><br><span class="small">The app should treat scores and reward requests from the device as untrusted input.</span></div>
+    <div class="card"><b>💳 Payments</b><br><span class="small">No real-money wagering, cash prizes or withdrawals are enabled.</span></div>
+    <div class="card"><b>👨‍👩‍👧 Family safety</b><br><span class="small">Parent/guardian controls and applicable privacy requirements must be implemented before a kids/teen launch.</span></div>
+  </div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="securityHome">HOME</button>
+</section>
+
+<section id="stats" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#22c7ff,#18b77a)">
+    <h1>Player Stats 📊</h1><p>See your progress at a glance.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="card"><div class="label">LEVEL</div><div class="value" id="statLevel">1</div></div>
+    <div class="card"><div class="label">XP</div><div class="value" id="statXP">0</div></div>
+    <div class="card"><div class="label">BEST SCORE</div><div class="value" id="statBest">0</div></div>
+    <div class="card"><div class="label">GAMES</div><div class="value" id="statGames">0</div></div>
+    <div class="card"><div class="label">COINS</div><div class="value" id="statCoins">0</div></div>
+    <div class="card"><div class="label">PET</div><div class="value" id="statPet">None</div></div>
+  </div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="statsHome">HOME</button>
+</section>
+
+<section id="account" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#22c7ff)">
+    <h1>Player Account 👤</h1>
+    <p>Player account. No real payments.</p>
+  </div>
+  <div class="card" id="syncStatus"><b>☁️ Cloud Sync</b><br><span class="small" id="syncText">Not connected</span></div>
+  <div class="card">
+    <div class="label">USERNAME</div>
+    <div class="value" id="accountName">Guest</div>
+    <div class="small" id="accountStatus">Local mode</div>
+  </div>
+  <div style="display:grid;gap:10px;margin-top:12px">
+    <input id="usernameInput" placeholder="Email address" maxlength="120" autocomplete="email" style="padding:14px;border-radius:12px;border:0">
+    <input id="passwordInput" type="password" placeholder="Password (10+ characters)" maxlength="80" style="padding:14px;border-radius:12px;border:0">
+    <button class="play" id="registerBtn">CREATE ACCOUNT</button>
+    <button style="background:#303765;color:#fff" id="loginBtn">LOG IN</button>
+    <button style="background:#303765;color:#fff" id="logoutBtn">LOG OUT</button>
+  </div>
+  <p class="small" id="accountMsg" style="margin-top:12px"></p>
+  <button style="margin-top:10px;width:100%;background:#18b77a;color:#fff" id="syncNowBtn">☁️ SYNC NOW</button>
+  <button style="margin-top:8px;width:100%;background:#303765;color:#fff" id="accountHome">HOME</button>
+</section>
+
+<section id="safety" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#18b77a,#22c7ff)">
+    <h1>Family Safety 🛡️</h1>
+    <p>Safety tools for parents and guardians.</p>
+  </div>
+  <div style="display:grid;gap:12px">
+    <div class="card"><b>🕒 Play-time reminders</b><br><span class="small">Play-time reminder setting — device restrictions are not applied.</span></div>
+    <div class="card"><b>💬 Social features</b><br><span class="small">Chat is not enabled in this build.</span></div>
+    <div class="card"><b>💳 Purchases</b><br><span class="small">Real-money purchases are disabled.</span></div>
+    <div class="card"><b>🔒 Privacy</b><br><span class="small">This production stores progress locally; the cloud backend is separate.</span></div>
+    <div class="card"><b>🚩 Report / Block</b><br><span class="small">Planned for the production version before social features launch.</span></div>
+  </div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="safetyHome">HOME</button>
+</section>
+
+<section id="minigames" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#22c7ff,#7d4cff)">
+    <h1>Mini-Game Arcade 🎮</h1><p>Pick a challenge and earn virtual XP.</p>
+  </div>
+  <div style="display:grid;gap:12px">
+    <button class="card miniChoice" data-game="quick" style="color:#fff;text-align:left;border:2px solid #ff4f9a">⚡ <b>Quick Tap</b><br><span class="small">30-second reaction challenge</span></button>
+    <button class="card miniChoice" data-game="memory" style="color:#fff;text-align:left;border:2px solid #22c7ff">🧠 <b>Memory Match</b><br><span class="small">Remember the sequence</span></button>
+    <button class="card miniChoice" data-game="color" style="color:#fff;text-align:left;border:2px solid #62d96b">🎨 <b>Color Rush</b><br><span class="small">Match the correct color</span></button>
+    <button class="card miniChoice" data-game="puzzle" style="color:#fff;text-align:left;border:2px solid #ffcf33">🧩 <b>Puzzle Sprint</b><br><span class="small">Fast pattern challenges</span></button>
+  </div>
+  <div class="card" style="margin-top:12px"><b>🏆 Achievements</b><p class="small">First Tap • Speedster • 1,000 Points • 5 Games • Level 5</p></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="arcadeHomeMini">HOME</button>
+</section>
+
+<section id="memory" style="display:none">
+  <div class="hero"><h1>Memory Match 🧠</h1><p>Watch the sequence, then repeat it.</p></div>
+  <div class="card" style="text-align:center"><div id="memorySeq" style="font-size:32px;letter-spacing:8px">••••</div><p class="small" id="memoryMsg">Press start.</p><button class="play" id="memoryStart">START</button></div>
+  <div id="memoryButtons" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="memoryHome">ARCADE</button>
+</section>
+
+<section id="color" style="display:none">
+  <div class="hero"><h1>Color Rush 🎨</h1><p>Tap the color named by the word.</p></div>
+  <div class="card" style="text-align:center"><div class="small">CHOOSE:</div><div id="colorWord" style="font-size:38px;font-weight:900;margin:14px">RED</div></div>
+  <div id="colorButtons" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"></div>
+  <div class="card" style="margin-top:12px;text-align:center">Score: <b id="colorScore">0</b> • Round: <b id="colorRound">0</b>/10</div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="colorHome">ARCADE</button>
+</section>
+
+<section id="achievements" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ffcf33,#ff7a4d)"><h1>Achievements 🏆</h1><p>Collect badges by playing.</p></div>
+  <div id="achievementList" style="display:grid;gap:10px"></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="achHome">HOME</button>
+</section>
+
+<section id="inventory" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ffcf33,#ff7a4d)">
+    <h1>My Collection 🎒</h1>
+    <p>Your characters, pets, badges and virtual items.</p>
+  </div>
+  <div class="card"><b>🧑‍🎤 Character</b><br><span id="invCharacter" class="small">Starter Champ</span></div>
+  <div class="card" style="margin-top:10px"><b>🐾 Pet</b><br><span id="invPet" class="small">None</span></div>
+  <div class="card" style="margin-top:10px"><b>🏆 Badges</b><br><span id="invBadges" class="small">0 unlocked</span></div>
+  <div class="card" style="margin-top:10px"><b>🪙 Virtual Coins</b><br><span id="invCoins" class="small">0</span></div>
+  <div class="card" style="margin-top:10px"><b>🎁 Season Items</b><br><span id="rewardItems" class="small">No season items yet</span><div id="rewardEquip" style="margin-top:8px"></div></div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="inventoryHome">HOME</button>
+</section>
+
+<section id="pets" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ff7aa8,#8d5cff)">
+    <h1>Pet Park 🐾</h1><p>Collect cute companions as you level up.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <button class="card petChoice" data-pet="Corgi" style="color:#fff;text-align:center">🐶<br><b>Corgi</b><br><span class="small">Friendly</span></button>
+    <button class="card petChoice" data-pet="Fox" style="color:#fff;text-align:center">🦊<br><b>Fox</b><br><span class="small">Clever</span></button>
+    <button class="card petChoice" data-pet="Bunny" style="color:#fff;text-align:center">🐰<br><b>Bunny</b><br><span class="small">Lucky</span></button>
+    <button class="card petChoice" data-pet="Dragon" style="color:#fff;text-align:center">🐲<br><b>Dragon</b><br><span class="small">Rare</span></button>
+  </div>
+  <p class="small" style="margin-top:14px">Selected pet: <b id="selectedPet">None</b></p>
+  <button style="width:100%;background:#303765;color:#fff" id="petsHome">HOME</button>
+</section>
+
+<section id="daily" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#ffb52e,#ff4f81)">
+    <h1>Daily Reward 🎁</h1><p>Come back each day for virtual rewards.</p>
+  </div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:55px">🎁</div>
+    <div class="value">+100 Coins</div>
+    <p class="small">One virtual reward per day in this build.</p>
+    <button class="play" id="claimDaily">CLAIM REWARD</button>
+  </div>
+  <p id="dailyStatus" class="small" style="text-align:center;margin-top:12px"></p>
+  <button style="width:100%;background:#303765;color:#fff" id="dailyHome">HOME</button>
+</section>
+
+<section id="map" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#18b77a,#22c7ff)">
+    <h1>Adventure Map 🗺️</h1>
+    <p>Explore, play mini-games, and unlock rewards.</p>
+  </div>
+  <div class="card" style="margin-bottom:12px;text-align:center">
+    <div style="font-size:46px">🌟</div>
+    <div class="label">YOUR JOURNEY</div>
+    <div class="value">Level <span id="mapLevel">1</span></div>
+    <div class="small"><span id="mapXP">0</span> / 100 XP</div>
+  </div>
+  <div style="display:grid;gap:12px">
+    <button type="button" onclick="document.getElementById('map').style.display='none';document.getElementById('character').style.display='block';" id="mapQuick" class="card" style="color:#fff;text-align:left;border:2px solid #ff4f9a">
+      ⚡ <b>Quick Tap</b><br><span class="small">Available now • Earn XP</span>
+    </button>
+    <button class="card" style="color:#fff;text-align:left;opacity:.7">
+      🧠 <b>Memory Blast</b><br><span class="small">Unlock at Level 2</span>
+    </button>
+    <button class="card" style="color:#fff;text-align:left;opacity:.7">
+      🧩 <b>Puzzle Race</b><br><span class="small">Unlock at Level 3</span>
+    </button>
+    <button class="card" style="color:#fff;text-align:left;opacity:.7">
+      🐾 <b>Pet Park</b><br><span class="small">Unlock at Level 5</span>
+    </button>
+  </div>
+  <div class="security">
+    🛡️ <b>Safe progression:</b> rewards are virtual only. No gambling, cash prizes, or purchases are enabled.
+  </div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="mapHome">HOME</button>
+</section>
+
+<section id="character" style="display:none">
+  <div class="hero" style="background:linear-gradient(145deg,#7d4cff,#22c7ff)">
+    <h1>Choose Your Champ 🧑‍🎤</h1>
+    <p>Pick a character, then jump into Quick Tap.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <button class="card" data-champ="Nova" style="color:#fff;text-align:center;border:2px solid #ff4f9a">🧑‍🎤<br><b>Nova</b><br><span class="small">Speed</span></button>
+    <button class="card" data-champ="Kai" style="color:#fff;text-align:center;border:2px solid #22c7ff">🧑‍🚀<br><b>Kai</b><br><span class="small">Focus</span></button>
+    <button class="card" data-champ="Luna" style="color:#fff;text-align:center;border:2px solid #9d6cff">👩‍🎤<br><b>Luna</b><br><span class="small">Combo</span></button>
+    <button class="card" data-champ="Zed" style="color:#fff;text-align:center;border:2px solid #62d96b">🧑‍🚀<br><b>Zed</b><br><span class="small">Balance</span></button>
+  </div>
+  <div class="security">
+    🔒 <b>Account safety:</b> character choices are cosmetic. No payment information or personal information is collected.
+  </div>
+  <button style="margin-top:12px;width:100%;background:#303765;color:#fff" id="backHome">BACK HOME</button>
+</section>
+
+<section id="game">
+    <div class="gamebox">
+      <div class="top"><span>Score: <b id="score">0</b></span><span>Time: <b id="time">30</b>s</span></div>
+      <div id="startOverlay"><div><h2>Ready?</h2><p>Hit START, then tap every target.</p><button class="play" id="startBtn">START</button></div></div>
+      <div id="target" aria-label="Tap target"></div>
+    </div>
+    <div class="result" id="result">
+      <div class="small">YOUR SCORE</div>
+      <div class="score" id="finalScore">0</div>
+      <p id="resultText"></p>
+      <button class="play" id="againBtn">PLAY AGAIN</button>
+      <button style="margin-top:8px;width:100%;background:#303765;color:#fff" id="homeBtn">HOME</button>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+// V34 failsafe navigation: keeps the core game reachable if an optional feature fails.
+document.addEventListener("DOMContentLoaded", function(){
+  const p=document.getElementById("playBtn");
+  if(p) p.addEventListener("click",function(){
+    const h=document.getElementById("home"),m=document.getElementById("map");
+    if(h&&m){h.style.display="none";m.style.display="block";}
+  });
+});
+</script>
+<script>
+const $ = id => document.getElementById(id);
+let score=0,time=30,running=false,timer=null;
+let best=Number(localStorage.getItem("pc_best")||0),coins=Number(localStorage.getItem("pc_coins")||0);
+let xp=Number(localStorage.getItem("pc_xp")||0),level=Number(localStorage.getItem("pc_level")||1);
+let pet=localStorage.getItem("pc_pet")||"None";
+function refreshProgress(){
+  $("best").textContent=best; $("coins").textContent=coins; $("xp").textContent=xp; $("level").textContent=level;
+  $("xpbar").style.width=(xp%100)+"%"; $("selectedPet").textContent=pet; if($("mapLevel")) $("mapLevel").textContent=level; if($("mapXP")) $("mapXP").textContent=xp;
+}
+refreshProgress();
+
+function placeTarget(){
+  const box=$("target"), area=document.querySelector(".gamebox");
+  const maxX=area.clientWidth-box.offsetWidth-8, maxY=area.clientHeight-box.offsetHeight-8;
+  box.style.left=(8+Math.random()*Math.max(0,maxX))+"px";
+  box.style.top=(45+Math.random()*Math.max(0,maxY-45))+"px";
+  box.style.display="block";
+}
+function endGame(){
+  running=false; clearInterval(timer); $("target").style.display="none";
+  const baseScore=score;
+  const petScore=Math.round(baseScore*activePetMultiplier());
+  if(petScore>baseScore) showPetToast("🐾 Your pet boosted the score!");
+  score=petScore;
+  if(score>best){best=score;localStorage.setItem("pc_best",best);$("best").textContent=best}
+  const earned=Math.floor(score/10); coins+=earned; xp+=Math.max(10,Math.floor(score/5));
+  while(xp>=100){xp-=100;level++}
+localStorage.setItem("pc_coins",coins); localStorage.setItem("pc_xp",xp); localStorage.setItem("pc_level",level); refreshProgress(); queueCloudSave();
+if(authToken){ syncProfileToCloud().catch(()=>{}) }
+  $("finalScore").textContent=score;
+  $("resultText").textContent=`Great job! You earned ${earned} virtual coins.`;
+  $("result").style.display="block";
+}
+function startGame(){
+  score=0;time=30;running=true;$("score").textContent=0;$("time").textContent=30;
+  $("result").style.display="none";$("startOverlay").style.display="none";placeTarget();
+  clearInterval(timer);
+  timer=setInterval(()=>{time--; $("time").textContent=time;if(time<=0)endGame()},1000);
+}
+$("petsBtn").onclick=()=>{$("home").style.display="none";$("pets").style.display="block";refreshProgress()};
+$("dailyBtn").onclick=()=>{$("home").style.display="none";$("daily").style.display="block";$("dailyStatus").textContent=""};
+$("petsHome").onclick=()=>{$("pets").style.display="none";$("home").style.display="block"};
+$("dailyHome").onclick=()=>{$("daily").style.display="none";$("home").style.display="block"};
+document.querySelectorAll(".petChoice").forEach(btn=>btn.onclick=()=>{pet=btn.dataset.pet;localStorage.setItem("pc_pet",pet);refreshProgress()});
+$("claimDaily").onclick=()=>{
+  const today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem("pc_daily")===today){$("dailyStatus").textContent="Already claimed today. Come back tomorrow!";return}
+  coins+=100; xp+=25; while(xp>=100){xp-=100;level++}
+  localStorage.setItem("pc_coins",coins);localStorage.setItem("pc_xp",xp);localStorage.setItem("pc_level",level);localStorage.setItem("pc_daily",today);
+  refreshProgress();queueCloudSave();$("dailyStatus").textContent="Reward claimed! +100 virtual coins and +25 XP.";
+};
+
+let gamesPlayed=Number(localStorage.getItem("pc_games")||0);
+function addProgress(points){
+  const boosted=Math.round(points*activeXPMultiplier());
+  xp+=boosted; gamesPlayed++;
+  if(typeof addSeasonPoints==="function") addSeasonPoints(Math.round(boosted/2));
+  if(pet==="Pixel Pup" && boosted>points) showPetToast("🐶 Pixel Pup boosted your XP!");
+
+  if(typeof completeQuest==="function" && gamesPlayed>=1){ completeQuest("play1"); } localStorage.setItem("pc_games",gamesPlayed);
+  while(xp>=100){xp-=100;level++}
+  localStorage.setItem("pc_xp",xp);localStorage.setItem("pc_level",level);refreshProgress();queueCloudSave();
+  if(typeof saveCloudProgress==="function") saveCloudProgress();
+}
+
+
+async function saveCloudProgress(){
+  if(!authToken)return;
+  try{
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    if(!user)return;
+    await supabaseClient.from("profiles").update({
+      xp:Number(xp)||0,level:Number(level)||1,coins:Number(coins)||0,best:Number(best)||0
+    }).eq("id",user.id);
+  }catch(e){}
+}
+function renderStats(){
+ $("statLevel").textContent=level; $("statXP").textContent=xp; $("statBest").textContent=best;
+ $("statGames").textContent=gamesPlayed; $("statCoins").textContent=coins; $("statPet").textContent=pet;
+}
+
+
+
+
+function activePetMultiplier(){
+ if(pet==="Comet Fox") return 1.10;
+ if(pet==="Tiny Dragon") return 1.15;
+ if(pet==="Starling") return 1.10;
+ return 1;
+}
+function activeXPMultiplier(){
+ return pet==="Pixel Pup" ? 1.05 : 1;
+}
+function showPetToast(text){
+ const el=$("petToast"); if(!el)return;
+ el.textContent=text; el.style.display="block";
+ clearTimeout(window.petToastTimer);
+ window.petToastTimer=setTimeout(()=>el.style.display="none",1800);
+}
+
+
+
+
+
+
+
+
+
+const missionRewards={
+ "Play a game":{type:"xp",amount:25,label:"+25 XP"},
+ "Earn season points":{type:"cosmetic",name:"Speed Champ",label:"🎨 Speed Champ"},
+ "Earn XP":{type:"badge",name:"Mission Master",label:"🏅 Mission Master Badge"}
+};
+function rewardMissionItem(reward){
+ if(!reward)return;
+ if(reward.type==="cosmetic"){
+   const list=unlockedCosmetics();
+   if(!list.includes(reward.name)){list.push(reward.name);saveUnlockedCosmetics(list);}
+ }
+ if(reward.type==="badge"){
+   const b=JSON.parse(localStorage.getItem("pc_mission_badges")||"[]");
+   if(!b.includes(reward.name)){b.push(reward.name);localStorage.setItem("pc_mission_badges",JSON.stringify(b));}
+ }
+}
+
+function missionClaims(){return JSON.parse(localStorage.getItem("pc_mission_claims")||"{}")}
+function missionTargetKey(){return "play_"+gamesPlayed+"_pts_"+seasonPts()+"_xp_"+xp}
+function showMissionReward(title,text,reward){
+ const claims=missionClaims(), key=title+"_"+reward;
+ if(claims[key]) return;
+ $("missionRewardTitle").textContent=title;
+ $("missionRewardText").textContent=text;
+ $("missionReward").style.display="block";
+ $("missionRewardBtn").onclick=()=>{
+   claims[key]=true; localStorage.setItem("pc_mission_claims",JSON.stringify(claims));
+   xp+=reward; localStorage.setItem("pc_xp",xp); refreshProgress();queueCloudSave();
+   $("missionReward").style.display="none"; showPetToast("🎁 Mission reward claimed!");
+ };
+}
+
+
+
+
+let tapInterval=null,tapCount=0,tapTime=10;
+
+let memTimer=null,memTime=30,memFirst=null,memLock=false,memMatches=0;
+
+let mathTimer=null,mathTime=30,mathCount=0,mathAnswer=0;
+function startMath(){
+ mathTime=30;mathCount=0;$("quickMath").style.display="block";$("mathTimer").textContent=mathTime;$("mathStatus").textContent="0 / 8";nextMath();
+ clearInterval(mathTimer);mathTimer=setInterval(()=>{mathTime--;$("mathTimer").textContent=mathTime;if(mathTime<=0){clearInterval(mathTimer);showPetToast("⏱️ Time! Try again.");}},1000);
+}
+function nextMath(){
+ const a=2+Math.floor(Math.random()*10),b=2+Math.floor(Math.random()*10),ops=["+","×"],op=ops[Math.floor(Math.random()*2)];
+ mathAnswer=op==="+"?a+b:a*b;$("mathQuestion").textContent=`${a} ${op} ${b} = ?`;
+ const opts=new Set([mathAnswer]);
+ while(opts.size<4){opts.add(Math.max(1,mathAnswer+(Math.floor(Math.random()*9)-4)));}
+ $("mathAnswers").innerHTML=[...opts].sort(()=>Math.random()-.5).map(v=>`<button class="mathAns" data-v="${v}" style="padding:14px;background:#303765;color:#fff;font-size:20px">${v}</button>`).join("");
+ document.querySelectorAll(".mathAns").forEach(b=>b.onclick=()=>answerMath(Number(b.dataset.v)));
+}
+function answerMath(v){
+ if(v!==mathAnswer){showPetToast("❌ Not quite!");return}
+ mathCount++;$("mathStatus").textContent=`${mathCount} / 8`;
+ if(mathCount>=8){clearInterval(mathTimer);mathTimer=null;addProgress(100);recordArcadeScore("Quick Math",mathCount,true);showPetToast("➕ +100 XP! Math Master!");}
+ else nextMath();
+}
+$("mathStart").onclick=startMath;
+
+const memSymbols=["🐶","🐱","🦊","🐲"];
+function startMemory(){
+ memTime=30;memFirst=null;memLock=false;memMatches=0;
+ const deck=[...memSymbols,...memSymbols].sort(()=>Math.random()-.5);
+ $("memoryGame").style.display="block";$("memoryTimer").textContent=memTime;$("memoryStatus").textContent="Matches: 0 / 4";
+ $("memoryBoard").innerHTML=deck.map((s,i)=>`<button class="memCard" data-i="${i}" data-s="${s}" style="height:60px;font-size:28px;background:#303765;color:#fff">?</button>`).join("");
+ document.querySelectorAll(".memCard").forEach(b=>b.onclick=()=>flipMemory(b));
+ clearInterval(memTimer);memTimer=setInterval(()=>{memTime--;$("memoryTimer").textContent=memTime;if(memTime<=0){clearInterval(memTimer);showPetToast("⏱️ Memory time! Try again.");}},1000);
+}
+function flipMemory(b){
+ if(memLock||b.textContent!=="?"||memTime<=0)return;
+ b.textContent=b.dataset.s;
+ if(!memFirst){memFirst=b;return}
+ if(memFirst.dataset.s===b.dataset.s){
+   memMatches++;memFirst.disabled=true;b.disabled=true;memFirst=null;$("memoryStatus").textContent=`Matches: ${memMatches} / 4`;
+   if(memMatches===4){clearInterval(memTimer);addProgress(75);recordArcadeScore("Memory Match",memMatches,true);showPetToast("🧠 +75 XP! Memory Master!");}
+ }else{
+   memLock=true;const first=memFirst;memFirst=null;
+   setTimeout(()=>{first.textContent="?";b.textContent="?";memLock=false},550);
+ }
+}
+$("memoryStart").onclick=startMemory;
+
+
+const arcadeGames=[
+ ["Tap Rush","🎯","Easy","15 hits / 10 sec","50 XP"],
+ ["Memory Match","🧠","Medium","4 pairs / 30 sec","75 XP"],
+ ["Quick Math","➕","Medium","8 questions / 30 sec","100 XP"]
+];
+function gameBest(id){return Number(localStorage.getItem("pc_best_"+id)||0)}
+
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function recordArcadeScore(game,score,completed=false){
+ const key=game.replace(/\s/g,"_").toLowerCase(), best=Math.max(gameBest(key),score);
+ localStorage.setItem("pc_best_"+key,best);
+ if(completed){
+   localStorage.setItem("pc_daily_"+todayKey(),"1");
+   if(!localStorage.getItem("pc_daily_reward_"+todayKey())){
+     localStorage.setItem("pc_daily_reward_"+todayKey(),"1");
+     addProgress(20); showPetToast("🌟 Daily Challenge +20 XP!");
+   }
+ }
+ renderArcadeHub();
+}
+function dailyDone(){return localStorage.getItem("pc_daily_"+todayKey())==="1"}
+
+function renderArcadeHub(){
+ $("dailyStatus").textContent=dailyDone()?"✅ Completed today":"",
+ $("arcadeCards").innerHTML=arcadeGames.map((g,i)=>{
+   const key=g[0].replace(/\s/g,"_").toLowerCase();
+   return `<div class="card"><span style="font-size:32px">${g[1]}</span> <b>${g[0]}</b><br><span class="small">${g[2]} • ${g[3]} • ${g[4]} • Best: ${gameBest(key)}</span><button class="arcadeLaunch" data-game="${g[0]}" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">PLAY</button></div>`;
+ }).join("");
+ document.querySelectorAll(".arcadeLaunch").forEach(b=>b.onclick=()=>launchArcadeGame(b.dataset.game));
+}
+function launchArcadeGame(name){
+ $("arcadeHub").style.display="none"; $("arcade").style.display="block";
+ if(name==="Tap Rush") showPetToast("🎯 Tap Rush ready!");
+ if(name==="Memory Match") showPetToast("🧠 Memory Match ready!");
+ if(name==="Quick Math") showPetToast("➕ Quick Math ready!");
+}
+$("arcadeBtnHub").onclick=()=>{$("home").style.display="none";$("arcadeHub").style.display="block";renderArcadeHub()};
+$("arcadeHubHome").onclick=()=>{$("arcadeHub").style.display="none";$("home").style.display="block"};
+$("dailyChallenge").onclick=()=>{$("arcadeHub").style.display="none";$("arcade").style.display="block";showPetToast("🌟 Daily Challenge started! Choose a game.")};
+
+function startTapRush(){
+ tapCount=0; tapTime=10; $("tapCount").textContent="0 / 15"; $("tapTimer").textContent="10"; $("tapRush").style.display="block";
+ clearInterval(tapInterval); tapInterval=setInterval(()=>{
+   tapTime--; $("tapTimer").textContent=tapTime;
+   if(tapTime<=0){clearInterval(tapInterval);showPetToast(tapCount>=15?"🏆 Great run!":"⏱️ Time! Try again.");}
+ },1000);
+}
+$("tapRushStart").onclick=startTapRush;
+$("tapTarget").onclick=()=>{
+ if(!tapInterval)return;
+ tapCount++; $("tapCount").textContent=tapCount+" / 15";
+ if(tapCount>=15){clearInterval(tapInterval);tapInterval=null;addProgress(50);recordArcadeScore("Tap Rush",tapCount,true);showPetToast("🎯 +50 XP!");}
+};
+
+function renderLobby(){
+ $("lobbyName").textContent=accountUser||"Player";
+ $("lobbyLevel").textContent=level;
+ $("lobbyPoints").textContent=seasonPts();
+ $("lobbyPet").textContent=pet==="Tiny Dragon"?"🐲":pet==="Comet Fox"?"🦊":pet==="Cloud Cat"?"🐱":pet==="Pixel Pup"?"🐶":pet==="Starling"?"🐦":"🐾";
+ const next=roadmap.find(r=>level<Number(r[0].replace("Level ","")));
+ $("lobbyGoal").textContent=next?next[1]+" "+next[2]+" • "+next[0]:"You reached the current roadmap!";
+}
+$("lobbyBtn").onclick=()=>{$("home").style.display="none";$("lobby").style.display="block";renderLobby()};
+$("lobbyHome").onclick=()=>{$("lobby").style.display="none";$("home").style.display="block"};
+$("lobbyPlay").onclick=()=>{$("lobby").style.display="none";$("home").style.display="block";showPetToast("🎮 Choose a mini-game to play!")};
+document.querySelectorAll(".lobbyNav").forEach(b=>b.onclick=()=>{const t=b.dataset.target;$("lobby").style.display="none";$(t).style.display="block";if(t==="collection")renderCollection();if(t==="customize")renderCustomize();if(t==="missions")renderMissions();if(t==="tournaments")renderTournament()});
+
+function renderCollection(){
+ const ownedPets=petDefs.filter(x=>petDefs.indexOf(x)>=0 && (x[0]==="Pixel Pup"||x[0]==="Cloud Cat"||x[0]==="Comet Fox"||x[0]==="Tiny Dragon"||x[0]==="Starling"));
+ $("collectionPets").textContent=ownedPets.map(x=>x[1]+" "+x[0]).join(" • ")||"No pets yet";
+ const cos=unlockedCosmetics();
+ $("collectionCosmetics").textContent=cos.join(" • ");
+ const badges=JSON.parse(localStorage.getItem("pc_mission_badges")||"[]");
+ const season=rewardInventory().map(x=>x.icon+" "+x.label);
+ $("collectionBadges").textContent=badges.join(" • ")||"No mission badges yet";
+ $("collectionSeason").textContent=season.join(" • ")||"No season items yet";
+}
+$("collectionBtn").onclick=()=>{$("home").style.display="none";$("collection").style.display="block";renderCollection()};
+$("collectionHome").onclick=()=>{$("collection").style.display="none";$("home").style.display="block"};
+
+function renderMissions(){
+ const pts=seasonPts(), next=roadmap.find(r=>level<Number(r[0].replace("Level ","")));
+ const missions=[
+  ["Play a game","🎮",gamesPlayed,Math.max(gamesPlayed+1,1),"Play one more game"],
+  ["Earn season points","🏆",pts,Math.ceil((pts+1)/100)*100,"Reach the next 100-point milestone"],
+  ["Earn XP","⭐",xp,(Math.floor(xp/100)+1)*100,"Reach the next XP milestone"]
+ ];
+ $("missionList").innerHTML=missions.map(m=>{
+   const progress=Math.min(100,Math.round((m[2]/m[3])*100));
+   const done=m[2]>=m[3];
+   return `<div class="card"><b>${done?"✅":"🎯"} ${m[1]}</b><br><span class="small">${m[2]} / ${m[3]} • ${m[4]}</span><div style="height:8px;background:#1e2445;border-radius:8px;margin-top:7px"><div style="height:100%;width:${progress}%;background:#18b77a;border-radius:8px"></div></div>${done?`<button class="missionClaim" data-name="${m[0]}" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">CLAIM 25 XP</button>`:""}</div>`;
+ }).join("")+(next?`<div class="card"><b>🔓 Next unlock</b><br><span class="small">${next[1]} ${next[2]} at ${next[0]}</span></div>`:`<div class="card"><b>👑 You reached the current roadmap!</b></div>`);
+ $("missionList").querySelectorAll(".missionClaim").forEach(b=>b.onclick=()=>{
+   const name=b.dataset.name; const claims=missionClaims(), key=name+"_"+seasonPts();
+   if(!claims[key]){
+   claims[key]=true; localStorage.setItem("pc_mission_claims",JSON.stringify(claims));
+   const reward=missionRewards[name]||{type:"xp",amount:25,label:"+25 XP"};
+   if(reward.type==="xp") xp+=reward.amount;
+   else { rewardMissionItem(reward); xp+=10; }
+   localStorage.setItem("pc_xp",xp); refreshProgress();queueCloudSave();
+   showPetToast("🎁 "+reward.label); renderMissions();
+ }
+ });
+}
+$("missionsBtn").onclick=()=>{$("home").style.display="none";$("missions").style.display="block";renderMissions()};
+$("missionsHome").onclick=()=>{$("missions").style.display="none";$("home").style.display="block"};
+
+const roadmap=[
+ ["Level 2","🏃","Speed Champ","Reach level 2"],
+ ["Level 3","🎁","Rookie Champ Badge","Reach level 3"],
+ ["Level 4","⭐","Star Champ","Reach level 4"],
+ ["Level 5","🐦","Starling Pet","Collect the Season reward"],
+ ["Level 6","🐉","Dragon Champ","Reach level 6"],
+ ["Level 8","👑","Legend Badge","Reach level 8"],
+ ["Level 10","🌌","Galaxy Champ","Reach level 10"]
+];
+function renderRoadmap(){
+ $("roadLevel").textContent=level; $("roadXP").textContent=xp;
+ $("roadmapList").innerHTML=roadmap.map(r=>{
+   const target=Number(r[0].replace("Level ",""));
+   const done=level>=target;
+   return `<div class="card" style="opacity:${done?1:.5}"><b>${done?"✅":"🔒"} ${r[1]} ${r[2]}</b><br><span class="small">${done?"Unlocked":"Unlock at "+r[0]} • ${r[3]}</span></div>`;
+ }).join("");
+}
+$("progressionBtn").onclick=()=>{$("home").style.display="none";$("progression").style.display="block";renderRoadmap()};
+$("progressionHome").onclick=()=>{$("progression").style.display="none";$("home").style.display="block"};
+
+const cosmetics=[
+ ["Classic Champ","🧑‍🚀"],
+ ["Speed Champ","🏃"],
+ ["Star Champ","⭐"],
+ ["Dragon Champ","🐉"],
+ ["Galaxy Champ","🌌"]
+];
+
+function unlockedCosmetics(){
+ const saved=JSON.parse(localStorage.getItem("pc_unlocked_cosmetics")||"null");
+ return saved||["Classic Champ"];
+}
+function saveUnlockedCosmetics(list){localStorage.setItem("pc_unlocked_cosmetics",JSON.stringify(list)); queueCloudSave()}
+function unlockCosmetic(name){
+ const list=unlockedCosmetics();
+ if(!list.includes(name)){list.push(name);saveUnlockedCosmetics(list);showPetToast("🎨 "+name+" unlocked!");}
+}
+function syncCosmeticUnlocks(){
+ const pts=seasonPts();
+ if(pts>=250) unlockCosmetic("Speed Champ");
+ if(pts>=750) unlockCosmetic("Star Champ");
+ if(pts>=1500) unlockCosmetic("Dragon Champ");
+ if(pts>=2500) unlockCosmetic("Galaxy Champ");
+}
+
+function equippedCosmetic(){return localStorage.getItem("pc_cosmetic")||"Classic Champ"}
+function renderCustomize(){
+ syncCosmeticUnlocks();
+ const current=equippedCosmetic();
+ const unlocked=unlockedCosmetics();
+ $("avatarName").textContent=current;
+ const item=cosmetics.find(x=>x[0]===current)||cosmetics[0];
+ $("avatarPreview").textContent=item[1];
+ const req={ "Classic Champ":0, "Speed Champ":250, "Star Champ":750, "Dragon Champ":1500, "Galaxy Champ":2500 };
+ $("cosmeticList").innerHTML=cosmetics.map(x=>{
+   const active=x[0]===current, has=unlocked.includes(x[0]);
+   return `<div class="card" style="opacity:${has?1:.5}"><span style="font-size:32px">${x[1]}</span> <b>${x[0]}</b><br><span class="small">${has?(active?"Equipped":"Unlocked"):"Unlock at "+req[x[0]]+" season points"}</span>
+   ${has&&!active?`<button class="cosmeticEquip" data-name="${x[0]}" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">EQUIP</button>`:""}</div>`;
+ }).join("");
+ $("cosmeticList").querySelectorAll(".cosmeticEquip").forEach(b=>b.onclick=()=>{
+   localStorage.setItem("pc_cosmetic",b.dataset.name); queueCloudSave(); renderCustomize(); showPetToast("🎨 "+b.dataset.name+" equipped!");
+ });
+}
+$("customizeBtn").onclick=()=>{$("home").style.display="none";$("customize").style.display="block";renderCustomize()};
+$("customizeHome").onclick=()=>{$("customize").style.display="none";$("home").style.display="block"};
+
+const seasonRewards=[
+ ["Rookie Champ",100,"⭐"],
+ ["Rising Star",500,"🌟"],
+ ["Super Champ",1000,"🏆"],
+ ["Legend",2000,"👑"]
+];
+
+
+const rewardItems={
+ "Rookie Champ":{id:"badge_rookie",type:"badge",label:"Rookie Champ Badge",icon:"⭐"},
+ "Rising Star":{id:"badge_rising",type:"badge",label:"Rising Star Badge",icon:"🌟"},
+ "Super Champ":{id:"pet_starling",type:"pet",label:"Starling Pet",icon:"🐦"},
+ "Legend":{id:"badge_legend",type:"badge",label:"Legend Badge",icon:"👑"}
+};
+function rewardInventory(){return JSON.parse(localStorage.getItem("pc_reward_inventory")||"[]")}
+function addRewardItem(item){
+ const inv=rewardInventory();
+ if(!inv.some(x=>x.id===item.id)){inv.push(item);localStorage.setItem("pc_reward_inventory",JSON.stringify(inv)); queueCloudSave();}
+}
+
+function claimedRewards(){return JSON.parse(localStorage.getItem("pc_claimed_rewards")||"[]")}
+function claimReward(name){
+ const c=claimedRewards(); if(c.includes(name))return;
+ c.push(name); localStorage.setItem("pc_claimed_rewards",JSON.stringify(c));
+ const item=rewardItems[name]; if(item) addRewardItem(item);
+ const el=$("rewardClaim"); el.style.display="none";
+ showPetToast(item ? `${item.icon} ${item.label} collected!` : "🎁 "+name+" collected!");
+}
+function showRewardClaim(name,text){
+ const c=claimedRewards(); if(c.includes(name))return;
+ $("rewardClaimTitle").textContent=name+" unlocked!";
+ $("rewardClaimText").textContent=text;
+ $("rewardClaim").style.display="block";
+ $("rewardClaimBtn").onclick=()=>claimReward(name);
+}
+
+function renderRewards(){
+ const pts=seasonPts();
+ $("rewardList").innerHTML=seasonRewards.map(r=>{
+   const earned=pts>=r[1], claimed=claimedRewards().includes(r[0]);
+   return `<div class="card" style="opacity:${earned?1:.5}"><b>${earned?"✅":"🔒"} ${r[2]} ${r[0]}</b><br><span class="small">${r[1]} season points • ${claimed?"Collected":earned?"Ready to collect":"Keep playing"}</span>${earned&&!claimed?`<button class="claimSeason" data-name="${r[0]}" data-icon="${r[2]}" style="margin-top:8px;width:100%;background:#18b77a;color:#fff">COLLECT REWARD</button>`:""}</div>`;
+ }).join("");
+ $("rewardList").querySelectorAll(".claimSeason").forEach(b=>b.onclick=()=>claimReward(b.dataset.name));
+
+}
+$("rewardsBtn").onclick=()=>{$("home").style.display="none";$("seasonrewards").style.display="block";renderRewards()};
+$("rewardsHome").onclick=()=>{$("seasonrewards").style.display="none";$("home").style.display="block"};
+
+function renderProfile(){
+ $("profileName").textContent=accountUser||"Player";
+ $("profileLevel").textContent=level;
+ $("profileSeason").textContent=seasonPts();
+ $("profilePet").textContent=pet||"None";
+ const unlocked=achievements ? achievements.filter(a=>a[2]).map(a=>a[0]) : [];
+ $("profileBadges").textContent=unlocked.length?unlocked.join(" • "):"No badges yet"; const mb=JSON.parse(localStorage.getItem("pc_mission_badges")||"[]"); $("missionBadges").textContent=mb.length?"🏅 "+mb.join(" • "):"";
+}
+$("profileBtn").onclick=()=>{$("home").style.display="none";$("profile").style.display="block";renderProfile()};
+$("profileHome").onclick=()=>{$("profile").style.display="none";$("home").style.display="block"};
+
+const leaderboardSeed=[
+ ["Nova",1280,"🥇"],["PixelKid",1040,"🥈"],["Sky",920,"🥉"],["You",0,"⭐"]
+];
+function seasonPts(){return Number(localStorage.getItem("pc_season_points")||0)}
+function renderTournament(){
+ const pts=seasonPts();
+ const rows=leaderboardSeed.map(x=>[x[0],x[0]==="You"?pts:x[1],x[2]])
+   .sort((a,b)=>b[1]-a[1]);
+ $("leaderboard").innerHTML=rows.map((x,i)=>`<div class="card"><b>${i+1}. ${x[2]} ${x[0]}</b><br><span class="small">${x[1]} virtual points</span></div>`).join("");
+ $("seasonPoints").textContent=pts;
+}
+function addSeasonPoints(n){
+ const v=seasonPts()+Math.max(0,n);
+ localStorage.setItem("pc_season_points",v); if(typeof syncCosmeticUnlocks==="function") syncCosmeticUnlocks(); queueCloudSave();
+}
+$("tournamentsBtn").onclick=()=>{$("home").style.display="none";$("tournaments").style.display="block";renderTournament()};
+$("tournamentsHome").onclick=()=>{$("tournaments").style.display="none";$("home").style.display="block"};
+
+const petPowers={"Starling":"🎁 +10% season points from eligible games",
+ "Pixel Pup":"⚡ +5% XP from games",
+ "Cloud Cat":"🧠 +1 memory hint per round",
+ "Comet Fox":"🏆 +10% virtual score",
+ "Tiny Dragon":"🔥 +15% virtual score"
+};
+function renderPetPowers(){
+ const current=pet||"None";
+ $("petPowerList").innerHTML=petDefs.map(x=>{
+   const active=current===x[0];
+   return `<div class="card" style="opacity:${active?1:.55}"><span style="font-size:30px">${x[1]}</span> <b>${x[0]}</b><br><span class="small">${petPowers[x[0]]}${active?" • EQUIPPED":""}</span></div>`;
+ }).join("");
+}
+$("petPowerBtn").onclick=()=>{$("home").style.display="none";$("petbonus").style.display="block";renderPetPowers()};
+$("petPowerHome").onclick=()=>{$("petbonus").style.display="none";$("home").style.display="block"};
+
+const petDefs=[
+ ["Pixel Pup","🐶",100],
+ ["Cloud Cat","🐱",150],
+ ["Comet Fox","🦊",250],
+ ["Tiny Dragon","🐲",400]
+];
+function ownedPets(){return JSON.parse(localStorage.getItem("pc_pets")||"[]")}
+function renderPetShop(){
+ const owned=ownedPets();
+ $("petCoins").textContent=coins;
+ $("petOptions").innerHTML=petDefs.map((p,i)=>{
+   const has=owned.includes(p[0]);
+   return `<div class="card"><span style="font-size:32px">${p[1]}</span> <b>${p[0]}</b><br>
+   <span class="small">${has?"Unlocked":"Cost: "+p[2]+" virtual coins"}</span>
+   <button class="petBuy" data-i="${i}" style="margin-top:8px;background:${has?"#303765":"#18b77a"};color:#fff;width:100%">${has?(pet===p[0]?"EQUIPPED":"EQUIP"):"UNLOCK"}</button></div>`;
+ }).join("");
+}
+function buyOrEquipPet(i){
+ const def=petDefs[i], owned=ownedPets();
+ if(!owned.includes(def[0])){
+   if(coins<def[2]){alert("Not enough virtual coins.");return}
+   coins-=def[2];owned.push(def[0]);localStorage.setItem("pc_pets",JSON.stringify(owned));
+ }
+ pet=def[0];localStorage.setItem("pc_pet",pet);refreshProgress();queueCloudSave();renderPetShop();renderInventory();
+}
+$("petshopBtn").onclick=()=>{$("home").style.display="none";$("petshop").style.display="block";renderPetShop()};
+$("petShopHome").onclick=()=>{$("petshop").style.display="none";$("home").style.display="block"};
+$("petOptions").addEventListener("click",e=>{const b=e.target.closest(".petBuy");if(b)buyOrEquipPet(Number(b.dataset.i))});
+
+const questDefs=[
+  ["play1","Play 1 game",1,"games"],
+  ["score100","Score 100 points",100,"score"],
+  ["xp50","Earn 50 XP",50,"xp"]
+];
+function questState(){return JSON.parse(localStorage.getItem("pc_quests")||"{}")}
+function renderQuests(){
+ const q=questState();
+ $("questList").innerHTML=questDefs.map(d=>{
+   const done=!!q[d[0]];
+   return `<div class="card" style="opacity:${done?.55:1}"><b>${done?"✅":"🎯"} ${d[1]}</b><br><span class="small">${done?"Completed today":"Reward: 25 XP"}</span></div>`;
+ }).join("");
+ $("streakValue").textContent=Number(localStorage.getItem("pc_streak")||0);
+}
+function completeQuest(id){
+ const q=questState();
+ if(!q[id]){
+   q[id]=true; localStorage.setItem("pc_quests",JSON.stringify(q));
+   xp+=25; localStorage.setItem("pc_xp",xp); refreshProgress();queueCloudSave();
+ }
+}
+$("questsBtn").onclick=()=>{$("home").style.display="none";$("quests").style.display="block";renderQuests()};
+$("questsHome").onclick=()=>{$("quests").style.display="none";$("home").style.display="block"};
+
+$("launchBtn").onclick=()=>{$("home").style.display="none";$("launch").style.display="block"};
+$("launchHome").onclick=()=>{$("launch").style.display="none";$("home").style.display="block"};
+$("securityBtn").onclick=()=>{$("home").style.display="none";$("security").style.display="block"};
+$("securityHome").onclick=()=>{$("security").style.display="none";$("home").style.display="block"};
+$("statsBtn").onclick=()=>{$("home").style.display="none";$("stats").style.display="block";renderStats()};
+$("statsHome").onclick=()=>{$("stats").style.display="none";$("home").style.display="block"};
+
+function equipRewardPet(){
+ const inv=rewardInventory(), star=inv.find(x=>x.id==="pet_starling");
+ if(!star){showPetToast("🔒 Unlock Starling from Season Rewards first.");return}
+ pet="Starling"; localStorage.setItem("pc_pet",pet); refreshProgress(); queueCloudSave(); renderInventory();
+ showPetToast("🐦 Starling equipped!");
+}
+
+function renderInventory(){
+ $("invPet").textContent=pet;
+ $("invCoins").textContent=coins;
+ const unlocked=achievements ? achievements.filter(a=>a[2]).length : 0;
+ $("invBadges").textContent=unlocked+" unlocked";
+}
+$("inventoryBtn").onclick=()=>{$("home").style.display="none";$("inventory").style.display="block";renderInventory()};
+$("inventoryHome").onclick=()=>{$("inventory").style.display="none";$("home").style.display="block"};
+
+// V37 core gameplay fix: wire the main Quick Tap flow, character selection, target scoring, and safe navigation.
+function showSection(id){
+  document.querySelectorAll("main > section").forEach(s=>s.style.display="none");
+  const el=$(id); if(el) el.style.display="block";
+}
+document.querySelectorAll("[data-champ]").forEach(btn=>btn.addEventListener("click",()=>{
+  localStorage.setItem("pc_champ",btn.dataset.champ);
+  showSection("game");
+  $("startOverlay").style.display="flex";
+  $("result").style.display="none";
+  showPetToast("✨ "+btn.dataset.champ+" selected!");
+}));
+$("backHome").onclick=()=>showSection("home");
+$("startBtn").onclick=startGame;
+$("target").addEventListener("click",()=>{
+  if(!running)return;
+  score++; $("score").textContent=score; placeTarget();
+});
+$("againBtn").onclick=startGame;
+$("homeBtn").onclick=()=>{clearInterval(timer);running=false;showSection("home");};
+$("mapHome").onclick=()=>showSection("home");
+$("navCharacters").onclick=()=>{showSection("character")};
+$("navPets").onclick=()=>{showSection("petshop");if(typeof renderPetShop==="function")renderPetShop()};
+$("navProfile").onclick=()=>{showSection("profile");if(typeof renderProfile==="function")renderProfile()};
+const SUPABASE_URL="https://nswadoscsvbzxvxbrxzv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_qgVkhRy6qDuQpJHbTSAc4Q_mdHVEC2J";
+// V36 cloud layer: authentication plus a complete per-player game-state snapshot.
+// The publishable key is safe for browser use; database RLS must remain enabled.
+const supabaseClient=(window.supabase&&typeof window.supabase.createClient==="function")
+  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}})
+  : null;
+let authToken=localStorage.getItem("pc_access_token")||"";
+let refreshToken=localStorage.getItem("pc_refresh_token")||"";
+let accountUser=localStorage.getItem("pc_user")||"Guest";
+let cloudSyncBusy=false;
+let cloudHydrating=false;
+let cloudSaveTimer=null;
+$("accountName").textContent=accountUser;
+
+function cloudHeaders(token){
+  return {"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json",...(token?{"Authorization":"Bearer "+token}:{})};
+}
+async function cloudRequest(path,options={}){
+  const res=await fetch(SUPABASE_URL+path,{...options,headers:{...cloudHeaders(options.token||authToken),...(options.headers||{})}});
+  let body=null; try{body=await res.json()}catch(e){}
+  if(!res.ok){const msg=body&&(body.msg||body.message||body.error_description||body.error);throw new Error(msg||`Cloud request failed (${res.status})`)}
+  return body;
+}
+function setCloudTokens(access,refresh){
+  authToken=access||"";refreshToken=refresh||"";
+  if(access)localStorage.setItem("pc_access_token",access);else localStorage.removeItem("pc_access_token");
+  if(refresh)localStorage.setItem("pc_refresh_token",refresh);else localStorage.removeItem("pc_refresh_token");
+  if(access)localStorage.setItem("pc_token",access);else localStorage.removeItem("pc_token");
+}
+async function getCloudUser(){
+  if(supabaseClient){const {data:{user}}=await supabaseClient.auth.getUser();return user||null;}
+  if(!authToken)return null;
+  try{return await cloudRequest("/auth/v1/user",{token:authToken});}catch(e){
+    if(refreshToken){
+      try{
+        const data=await cloudRequest("/auth/v1/token?grant_type=refresh_token",{method:"POST",token:SUPABASE_PUBLISHABLE_KEY,body:JSON.stringify({refresh_token:refreshToken})});
+        setCloudTokens(data.access_token,data.refresh_token||refreshToken);return data.user||await cloudRequest("/auth/v1/user");
+      }catch(refreshErr){}
+    }
+    setCloudTokens("","");return null;
+  }
+}
+function getLocalGameState(){
+  const state={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key && key.startsWith("pc_") && !["pc_token","pc_access_token","pc_refresh_token"].includes(key)) state[key]=localStorage.getItem(key);
+  }
+  // Keep the live counters in the snapshot even if a legacy build missed a local key.
+  state.pc_best=String(Number(best)||0);state.pc_coins=String(Number(coins)||0);state.pc_xp=String(Number(xp)||0);state.pc_level=String(Number(level)||1);state.pc_games=String(Number(gamesPlayed)||0);state.pc_pet=pet||"None";
+  return state;
+}
+function applyLocalGameState(state){
+  if(!state)return;
+  cloudHydrating=true;
+  try{
+    Object.entries(state).forEach(([key,value])=>{if(key.startsWith("pc_")&&!['pc_token','pc_access_token','pc_refresh_token'].includes(key))localStorage.setItem(key,String(value));});
+    best=Number(localStorage.getItem("pc_best")||0);coins=Number(localStorage.getItem("pc_coins")||0);xp=Number(localStorage.getItem("pc_xp")||0);level=Number(localStorage.getItem("pc_level")||1);gamesPlayed=Number(localStorage.getItem("pc_games")||0);pet=localStorage.getItem("pc_pet")||"None";
+    accountUser=localStorage.getItem("pc_user")||accountUser||"Guest";
+    refreshProgress();
+  }finally{cloudHydrating=false;}
+}
+async function saveFullGameState(){
+  if(cloudSyncBusy)return;
+  const user=await getCloudUser();
+  if(!user)return;
+  cloudSyncBusy=true;
+  try{
+    const state=getLocalGameState();
+    const payload={user_id:user.id,state:state,updated_at:new Date().toISOString()};
+    if(supabaseClient){const {error}=await supabaseClient.from("game_states").upsert(payload,{onConflict:"user_id"});if(error)throw error;}
+    else await cloudRequest("/rest/v1/game_states?on_conflict=user_id",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(payload)});
+    $("syncText").textContent="☁️ Cloud save synced";
+  }finally{cloudSyncBusy=false;}
+}
+function queueCloudSave(){
+  if(cloudHydrating || !authToken)return;
+  clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(()=>saveFullGameState().catch(e=>console.warn("Cloud save:",e)),700);
+}
+async function loadFullGameState(){
+  const user=await getCloudUser();if(!user)return false;
+  let data;
+  if(supabaseClient){const r=await supabaseClient.from("game_states").select("state,updated_at").eq("user_id",user.id).maybeSingle();if(r.error)throw r.error;data=r.data;}
+  else{const rows=await cloudRequest(`/rest/v1/game_states?select=state,updated_at&user_id=eq.${encodeURIComponent(user.id)}&limit=1`);data=rows&&rows[0];}
+  if(data&&data.state){applyLocalGameState(data.state);return true;}
+  await saveFullGameState();
+  return false;
+}
+async function syncProfileToCloud(){
+  const user=await getCloudUser();
+  if(!user){$("syncText").textContent="Not connected — local mode";return;}
+  const username=(user.user_metadata&&user.user_metadata.username)||user.email.split("@")[0];
+  const payload={id:user.id,username:username,xp:Number(xp)||0,level:Number(level)||1,coins:Number(coins)||0,best:Number(best)||0};
+  if(supabaseClient){const {error}=await supabaseClient.from("profiles").upsert(payload,{onConflict:"id"});if(error)throw error;}
+  else await cloudRequest("/rest/v1/profiles?on_conflict=id",{method:"POST",headers:{"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(payload)});
+  localStorage.setItem("pc_user",username);accountUser=username;
+  $("accountName").textContent=username;$("accountStatus").textContent="Secure Supabase account";
+  await saveFullGameState();
+}
+async function loadCloudProfile(){
+  const user=await getCloudUser();if(!user){authToken="";return}
+  const loaded=await loadFullGameState();
+  if(!loaded){
+    // Legacy profiles are still imported once when no V36 game-state exists.
+    if(supabaseClient){const {data,error}=await supabaseClient.from("profiles").select("username,xp,level,coins,best").eq("id",user.id).maybeSingle();if(error)throw error;
+      if(data){accountUser=data.username||user.email.split("@")[0];xp=Number(data.xp)||0;level=Number(data.level)||1;coins=Number(data.coins)||0;best=Number(data.best)||0;localStorage.setItem("pc_user",accountUser);localStorage.setItem("pc_xp",xp);localStorage.setItem("pc_level",level);localStorage.setItem("pc_coins",coins);localStorage.setItem("pc_best",best);refreshProgress();await saveFullGameState();}
+    } else {
+      const rows=await cloudRequest(`/rest/v1/profiles?select=username,xp,level,coins,best&id=eq.${encodeURIComponent(user.id)}&limit=1`);const data=rows&&rows[0];
+      if(data){accountUser=data.username||user.email.split("@")[0];xp=Number(data.xp)||0;level=Number(data.level)||1;coins=Number(data.coins)||0;best=Number(data.best)||0;localStorage.setItem("pc_user",accountUser);localStorage.setItem("pc_xp",xp);localStorage.setItem("pc_level",level);localStorage.setItem("pc_coins",coins);localStorage.setItem("pc_best",best);refreshProgress();await saveFullGameState();}
+    }
+  }
+  accountUser=accountUser||user.email.split("@")[0];localStorage.setItem("pc_user",accountUser);$("accountName").textContent=accountUser;$("accountStatus").textContent="Secure Supabase account";$("syncText").textContent="☁️ Cloud save synced";
+}
+async function refreshCloud(){
+  try{if(await getCloudUser())await loadCloudProfile();else $("syncText").textContent="Local mode — sign in to cloud";}
+  catch(e){$("syncText").textContent="Cloud setup needs attention";console.warn("Pixel Champs cloud:",e);}
+}
+function setAccount(user,token,refresh){
+  accountUser=user||"Guest";setCloudTokens(token||"",refresh||"");localStorage.setItem("pc_user",accountUser);
+  $("accountName").textContent=accountUser;$("accountStatus").textContent=token?"Secure Supabase account":"Local mode";refreshCloud();
+}
+$("accountBtn").onclick=()=>{$("home").style.display="none";$("account").style.display="block";$("accountMsg").textContent=""};
+$("accountHome").onclick=()=>{$("account").style.display="none";$("home").style.display="block"};
+$("syncNowBtn").onclick=async()=>{try{$("syncText").textContent="☁️ Syncing…";await saveFullGameState();await syncProfileToCloud();$("accountMsg").textContent="Cloud save completed.";}catch(e){$("syncText").textContent="Cloud setup needs attention";$("accountMsg").textContent=e.message||"Sync failed."}};
+$("registerBtn").onclick=async()=>{
+  try{
+    const email=$("usernameInput").value.trim(),password=$("passwordInput").value;
+    if(!email.includes("@"))throw new Error("Enter a valid email address.");if(password.length<10)throw new Error("Use a password with at least 10 characters.");
+    const username=email.split("@")[0].slice(0,20);
+    if(supabaseClient){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{username}}});if(error)throw error;
+      if(!data.session){$("accountMsg").textContent="Account created. Check your email to confirm, then log in.";}else{setAccount(username,data.session.access_token,data.session.refresh_token);await syncProfileToCloud();$("accountMsg").textContent="Account created and cloud save connected.";}
+    }else{const data=await cloudRequest("/auth/v1/signup",{method:"POST",token:SUPABASE_PUBLISHABLE_KEY,body:JSON.stringify({email,password,data:{username}})});
+      if(!data.access_token){$("accountMsg").textContent="Account created. Check your email to confirm, then log in.";}else{setAccount(username,data.access_token,data.refresh_token);await syncProfileToCloud();$("accountMsg").textContent="Account created and cloud save connected.";}
+    }
+  }catch(e){$("accountMsg").textContent=e.message}
+};
+$("loginBtn").onclick=async()=>{
+  try{
+    const email=$("usernameInput").value.trim(),password=$("passwordInput").value;if(!email.includes("@"))throw new Error("Enter a valid email address.");
+    let data;
+    if(supabaseClient){const r=await supabaseClient.auth.signInWithPassword({email,password});if(r.error)throw r.error;data=r.data;}
+    else data=await cloudRequest("/auth/v1/token?grant_type=password",{method:"POST",token:SUPABASE_PUBLISHABLE_KEY,body:JSON.stringify({email,password})});
+    const user=data.user,username=(user.user_metadata&&user.user_metadata.username)||email.split("@")[0];setAccount(username,data.session?data.session.access_token:data.access_token,data.session?data.session.refresh_token:data.refresh_token);await loadCloudProfile();$("accountMsg").textContent="Logged in — cloud save connected.";
+  }catch(e){$("accountMsg").textContent=e.message}
+};
+$("logoutBtn").onclick=async()=>{try{if(supabaseClient)await supabaseClient.auth.signOut();else if(authToken)await cloudRequest("/auth/v1/logout",{method:"POST"});}catch(e){}setAccount("Guest","");$("accountMsg").textContent="Logged out."};
+if(supabaseClient){supabaseClient.auth.onAuthStateChange((event,session)=>{if(session)setCloudTokens(session.access_token,session.refresh_token);else setCloudTokens("","");});}
+// Autosave protects progress even when a player navigates away without tapping SYNC NOW.
+setInterval(()=>{if(authToken&&!cloudHydrating)saveFullGameState().catch(()=>{});},5000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&authToken)saveFullGameState().catch(()=>{});});
+window.addEventListener("beforeunload",()=>{if(authToken)queueCloudSave();});
+refreshCloud();
+
+</script>
+<!-- PIXEL_CHAMPS_V41: slot odds tuned so losses are common and jackpots are rare. -->
+
+<script>
+// V42 production build: game-first mobile shell and virtual-coin arcade.
+// V38: virtual-coin 777 slot machine. Real-money deposits, wagers and cash-outs are intentionally disabled.
+(function(){
+  function openSlots(){
+    const home=document.getElementById("home");
+    const slots=document.getElementById("slots");
+    if(home) home.style.display="none";
+    if(slots) slots.style.display="block";
+    if(typeof setBalance==="function") setBalance();
+    if(typeof setBet==="function") setBet(10);
+    window.scrollTo(0,0);
+  }
+
+  const symbols=['🍒','🍋','🔔','⭐','💎','7️⃣'];
+  let bet=10, spinning=false;
+  let slotSpins=Number(localStorage.getItem('pc_slot_spins')||0);
+  let slotBestWin=Number(localStorage.getItem('pc_slot_best_win')||0);
+  // Balanced reel odds: each symbol is equally likely.
+  // A matching pair is NOT a win; players need a real 3+ match.
+  const weights=[1,1,1,1,1,1];
+  function pick(){let n=Math.random()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<symbols.length;i++){n-=weights[i];if(n<=0)return symbols[i]}return symbols[0]}
+  function setBalance(){const b=document.getElementById('slotBalance');if(b)b.textContent=coins; const sp=document.getElementById('slotSpins'); if(sp)sp.textContent=slotSpins; const bw=document.getElementById('slotBestWin'); if(bw)bw.textContent=slotBestWin?('+'+slotBestWin):'—'}
+  function setBet(v){bet=v;document.querySelectorAll('.slotBet').forEach(x=>x.classList.toggle('active',Number(x.dataset.bet)===bet))}
+  function payout(reels){
+    const counts={}; reels.forEach(x=>counts[x]=(counts[x]||0)+1);
+    if(reels.every(x=>x==='7️⃣')) return 50;
+    if(reels.every(x=>x==='💎')) return 20;
+    if(reels.every(x=>x==='⭐')) return 10;
+    if((counts['🍒']||0)>=3) return 5;
+    // Two matching symbols are only a partial match and do not pay.
+    // This prevents the old version from winning on most spins.
+    return 0;
+  }
+  function render(reels){reels.forEach((x,i)=>{const el=document.getElementById('slot'+i);if(el)el.textContent=x})}
+  // Fair-feeling arcade odds: losses are common, wins are exciting, jackpots are rare.
+  // Target result mix: 87% loss, 10.5% cherry win, 1.8% star, 0.6% diamond, 0.1% jackpot.
+  function makeResult(){
+    const r=Math.random();
+    if(r<0.87){
+      // Loss: make sure there are no 3-of-a-kind matches.
+      let reels;
+      do{reels=[pick(),pick(),pick(),pick(),pick()]}while(payout(reels)>0);
+      return reels;
+    }
+    if(r<0.975){
+      // Common win: exactly three cherries.
+      const others=symbols.filter(s=>s!=='🍒');
+      const a=others[Math.floor(Math.random()*others.length)];
+      const b=others[Math.floor(Math.random()*others.length)];
+      return ['🍒','🍒','🍒',a,b].sort(()=>Math.random()-.5);
+    }
+    if(r<0.993)return ['⭐','⭐','⭐','⭐','⭐'];
+    if(r<0.999)return ['💎','💎','💎','💎','💎'];
+    return ['7️⃣','7️⃣','7️⃣','7️⃣','7️⃣'];
+  }
+  function spin(){
+    if(spinning)return;
+    if(coins<bet){document.getElementById('slotWin').textContent='Not enough virtual coins. Play games to earn more.';return}
+    spinning=true;slotSpins++;localStorage.setItem('pc_slot_spins',slotSpins);coins-=bet;localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();
+    const win=document.getElementById('slotWin');win.textContent='🎰 Spinning...';
+    let ticks=0;const iv=setInterval(()=>{render([pick(),pick(),pick(),pick(),pick()]);ticks++;if(ticks>=10){clearInterval(iv);const reels=makeResult();render(reels);const mult=payout(reels);const prize=bet*mult;if(prize){coins+=prize;if(prize>slotBestWin){slotBestWin=prize;localStorage.setItem('pc_slot_best_win',slotBestWin)}const lw=document.getElementById('slotLastWin');if(lw)lw.textContent='+'+prize;win.textContent=mult>=50?'💰 JACKPOT! +'+prize+' virtual coins!':'🎉 WIN! +'+prize+' virtual coins!';}else{const lw=document.getElementById('slotLastWin');if(lw)lw.textContent='—';win.textContent='No win this spin — try again!'}localStorage.setItem('pc_coins',coins);refreshProgress();setBalance();queueCloudSave();if(authToken&&typeof syncProfileToCloud==='function')syncProfileToCloud().catch(()=>{});spinning=false}},90)
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    const btn=document.getElementById('slotsBtn');if(btn)btn.onclick=openSlots;
+    const home=document.getElementById('slotsHome');if(home)home.onclick=()=>{document.getElementById('slots').style.display='none';document.getElementById('home').style.display='block'};
+    document.querySelectorAll('.slotBet').forEach(b=>b.onclick=()=>setBet(Number(b.dataset.bet)));
+    const spinBtn=document.getElementById('slotSpin');if(spinBtn)spinBtn.onclick=spin;
+  });
+})();
+</script>
+</body>
+</html>

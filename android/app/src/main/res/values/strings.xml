@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pixel Champs</string>
+    <string name="title_activity_main">Pixel Champs</string>
+    <string name="package_name">com.pixelchamps.game</string>
+    <string name="custom_url_scheme">com.pixelchamps.game</string>
+</resources>
