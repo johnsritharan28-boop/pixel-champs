@@ -7,3 +7,5 @@ This branch prepares Pixel Champs for iOS and Android using Capacitor.
 - Native projects are generated with the Capacitor CLI after installing dependencies.
 
 The original `main` branch is unchanged by this mobile setup.
+
+Build workflow trigger updated for the generated Capacitor iOS project.
