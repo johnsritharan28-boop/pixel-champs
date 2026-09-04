@@ -1,6 +1,6 @@
 {
   "appId": "com.pixelchamps.game",
   "appName": "Pixel Champs",
-  "webDir": "www",
+  "webDir": ".",
   "bundledWebRuntime": false
 }
