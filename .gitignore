@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.env.*
+# Capacitor native build outputs
+android/.gradle/
+android/build/
+android/app/build/
+android/.idea/
+ios/App/Pods/
+ios/App/build/
