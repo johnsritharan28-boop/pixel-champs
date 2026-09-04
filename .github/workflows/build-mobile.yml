@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   android:
-    name: Build Android test APK
+    name: Build Android release AAB
     runs-on: ubuntu-latest
     steps:
       - name: Checkout mobile-setup
@@ -36,19 +36,19 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build debug APK
+      - name: Build Android release AAB
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew bundleRelease
 
-      - name: Upload APK
+      - name: Upload Android AAB
         uses: actions/upload-artifact@v4
         with:
-          name: pixel-champs-android-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: pixel-champs-android-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
 
   ios:
-    name: Build iOS simulator app
+    name: Build iOS App Store archive
     runs-on: macos-26
     steps:
       - name: Checkout mobile-setup
@@ -68,12 +68,12 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync ios
 
-      - name: Build iOS simulator app
-        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO
+      - name: Archive iOS app
+        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -sdk iphoneos -archivePath build/ios/PixelChamps.xcarchive CODE_SIGNING_ALLOWED=NO archive
 
-      - name: Upload iOS simulator app
+      - name: Upload iOS archive
         uses: actions/upload-artifact@v4
         with:
-          name: pixel-champs-ios-simulator
-          path: build/ios/Build/Products/Debug-iphonesimulator/App.app
+          name: pixel-champs-ios-release-archive
+          path: build/ios/PixelChamps.xcarchive
           if-no-files-found: error
