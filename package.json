@@ -1,0 +1,21 @@
+{
+  "name": "pixel-champs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pixel Champs arcade game",
+  "scripts": {
+    "cap:sync": "cap sync",
+    "cap:add:ios": "cap add ios",
+    "cap:add:android": "cap add android",
+    "cap:open:ios": "cap open ios",
+    "cap:open:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/android": "^8.0.0"
+  }
+}
