@@ -1,0 +1,18 @@
+{
+  "name": "pixel-champs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pixel Champs iPhone-first free-to-play cosmic game",
+  "scripts": {
+    "build": "echo Static game shell ready for Capacitor packaging",
+    "sync:ios": "npx cap sync ios",
+    "open:ios": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "latest",
+    "@capacitor/ios": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest"
+  }
+}
