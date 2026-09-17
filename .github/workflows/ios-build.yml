@@ -1,0 +1,49 @@
+name: Pixel Champs iOS Build Validation
+
+on:
+  push:
+    branches:
+      - v80-ios-foundation
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Pixel Champs
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Capacitor iOS project
+        run: npx cap add ios
+        if: ${{ !hashFiles('ios/App/App.xcodeproj/project.pbxproj') }}
+
+      - name: Sync web app into iOS project
+        run: npx cap sync ios
+
+      - name: Build iOS simulator target
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Upload generated iOS project
+        uses: actions/upload-artifact@v4
+        with:
+          name: pixel-champs-ios-project
+          path: ios
+          if-no-files-found: error
