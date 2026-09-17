@@ -1,4 +1,4 @@
-const CACHE = 'pixel-champs-v79';
+const CACHE = 'pixel-champs-v80';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './Pixel_Champs_V77_Playable_Expansion.html'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
