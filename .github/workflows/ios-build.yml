@@ -6,6 +6,9 @@ on:
       - v80-ios-foundation
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-ios:
     runs-on: macos-latest
@@ -16,6 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - name: Install dependencies
         run: npm install
       - name: Prepare Capacitor web assets
@@ -27,25 +31,15 @@ jobs:
           cp manifest.webmanifest www/manifest.webmanifest
           cp icon.svg www/icon.svg
           cp service-worker.js www/service-worker.js
-          cp v80-enhancements.js www/v80-enhancements.js
-          cp v81-enhancements.js www/v81-enhancements.js
-          cp v82-enhancements.js www/v82-enhancements.js
-          cp v83-enhancements.js www/v83-enhancements.js
-          cp v84-enhancements.js www/v84-enhancements.js
-          cp v85-enhancements.js www/v85-enhancements.js
-          cp v86-enhancements.js www/v86-enhancements.js
-          cp v87-enhancements.js www/v87-enhancements.js
-          cp v88-enhancements.js www/v88-enhancements.js
-          cp v89-enhancements.js www/v89-enhancements.js
-          cp v90-enhancements.js www/v90-enhancements.js
-          cp v91-enhancements.js www/v91-enhancements.js
-          cp v92-enhancements.js www/v92-enhancements.js
+          for i in $(seq 80 92); do cp "v${i}-enhancements.js" "www/v${i}-enhancements.js"; done
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('www/index.html'); text=p.read_text()
-          text=text.replace('PLAYABLE • V79','COSMIC • V92')
-          scripts=''.join(f'<script src="./v{i}-enhancements.js"></script>' for i in range(80,93) if i != 81)
-          text=text.replace('</head>',scripts+'</head>')
+          p = Path('www/index.html')
+          text = p.read_text()
+          text = text.replace('PLAYABLE • V79', 'COSMIC • V92')
+          scripts = ''.join(f'<script src="./v{i}-enhancements.js"></script>' for i in range(80, 93) if i != 81)
+          if 'v92-enhancements.js' not in text:
+              text = text.replace('</head>', scripts + '</head>')
           p.write_text(text)
           PY
           cat > capacitor.config.json <<'EOF'
