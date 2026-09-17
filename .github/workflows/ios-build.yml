@@ -22,9 +22,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Prepare Capacitor web assets
+        run: |
+          rm -rf ios www
+          mkdir -p www
+          cp index.html www/index.html
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.pixelchamps.game",
+            "appName": "Pixel Champs",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          EOF
+
       - name: Generate Capacitor iOS project
-        run: rm -rf ios && npx cap add ios
-        if: ${{ !hashFiles('ios/App/App.xcodeproj/project.pbxproj') }}
+        run: npx cap add ios
 
       - name: Sync web app into iOS project
         run: npx cap sync ios
