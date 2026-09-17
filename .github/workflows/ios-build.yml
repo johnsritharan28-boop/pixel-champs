@@ -31,6 +31,15 @@ jobs:
           cp manifest.webmanifest www/manifest.webmanifest
           cp icon.svg www/icon.svg
           cp service-worker.js www/service-worker.js
+          cp v80-enhancements.js www/v80-enhancements.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('www/index.html')
+          text = p.read_text()
+          text = text.replace('PLAYABLE • V79', 'COSMIC • V80')
+          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script></head>')
+          p.write_text(text)
+          PY
           cat > capacitor.config.json <<'EOF'
           {
             "appId": "com.pixelchamps.game",
