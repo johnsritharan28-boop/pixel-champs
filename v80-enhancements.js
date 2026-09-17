@@ -13,7 +13,6 @@
     if (!w || !d) return;
 
     // V80: use the player's local calendar day for daily rewards.
-    const oldDaily = w.daily;
     w.daily = function () {
       const day = localDay();
       if (w.s.daily === day) { w.toast('Daily already claimed'); return; }
@@ -50,6 +49,40 @@
       w.save();
       w.toast('Daily spin reward claimed');
     };
+
+    // V80: Arena is now an actual multi-hit challenge instead of instant rewards.
+    let arenaHP = 300;
+    let arenaCleared = false;
+    const arenaCard = d.querySelector('#arena .card');
+    if (arenaCard) {
+      const actions = arenaCard.querySelector('.actions');
+      const note = arenaCard.querySelector('.note');
+      if (actions) {
+        const button = actions.querySelector('button');
+        if (button) {
+          button.textContent = '⚡ Strike the Void Titan';
+          button.onclick = () => {
+            if (arenaCleared) { w.toast('Arena cleared — start a new run later'); return; }
+            const damage = 75 + Math.floor(Math.random()*46);
+            arenaHP = Math.max(0, arenaHP - damage);
+            if (note) note.textContent = `Void Titan HP: ${arenaHP} / 300 • Hit for ${damage} damage.`;
+            if (arenaHP <= 0) {
+              arenaCleared = true;
+              w.s.tokens += 2;
+              w.s.dust += 140;
+              w.s.wins += 1;
+              w.addXP(140);
+              w.save();
+              button.textContent = '🏆 Arena Cleared';
+              if (note) note.textContent = 'Void Titan defeated! +140 Dust • +2 Tokens • +140 XP';
+              w.toast('Arena cleared!');
+            } else {
+              w.toast(`Titan hit! ${arenaHP} HP remaining`);
+            }
+          };
+        }
+      }
+    }
 
     // V80 visual badge: make the playable screen clearly identify the current build.
     const note = d.querySelector('.hero .note');
