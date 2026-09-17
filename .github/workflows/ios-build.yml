@@ -39,12 +39,13 @@ jobs:
           cp v85-enhancements.js www/v85-enhancements.js
           cp v86-enhancements.js www/v86-enhancements.js
           cp v87-enhancements.js www/v87-enhancements.js
+          cp v88-enhancements.js www/v88-enhancements.js
           python3 - <<'PY'
           from pathlib import Path
           p = Path('www/index.html')
           text = p.read_text()
-          text = text.replace('PLAYABLE • V79', 'COSMIC • V87')
-          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script><script src="./v82-enhancements.js"></script><script src="./v83-enhancements.js"></script><script src="./v84-enhancements.js"></script><script src="./v85-enhancements.js"></script><script src="./v86-enhancements.js"></script><script src="./v87-enhancements.js"></script></head>')
+          text = text.replace('PLAYABLE • V79', 'COSMIC • V88')
+          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script><script src="./v82-enhancements.js"></script><script src="./v83-enhancements.js"></script><script src="./v84-enhancements.js"></script><script src="./v85-enhancements.js"></script><script src="./v86-enhancements.js"></script><script src="./v87-enhancements.js"></script><script src="./v88-enhancements.js"></script></head>')
           p.write_text(text)
           PY
           cat > capacitor.config.json <<'EOF'
