@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pixel Champs — V70 Cosmic Social Hub</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050711;color:#f7f8ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:900px;margin:auto;padding:14px 13px 46px}.hero{text-align:center;padding:8px 0 4px}.ey{font-size:11px;letter-spacing:2px;color:#63dcff;font-weight:900}.hero h1{margin:5px 0;font-size:30px}.muted{color:#9ba6c5;font-size:12px}.nav{display:flex;gap:7px;overflow:auto;margin:12px 0}.nav button{white-space:nowrap}.stats,.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat,.card,.friend,.post,.achievement,.chat{background:linear-gradient(180deg,#151b31,#0d1222);border:1px solid #293656;border-radius:16px}.stat{text-align:center;padding:10px 4px}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:#929dbc}.card{padding:14px;margin-top:10px}.row{display:flex;justify-content:space-between;align-items:center;gap:9px}.chip{display:inline-block;padding:4px 8px;border-radius:99px;background:#29244d;color:#d6d0ff;font-size:10px;font-weight:850}.avatar{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#28365f,#1b1438);border:1px solid #3a4b75;font-size:30px;flex:none}.profile{display:flex;gap:12px;align-items:center}.profile h2{margin:0;font-size:20px}.profile p{margin:3px 0 0}.friend,.post,.achievement,.chat{padding:11px}.friend b,.post b,.achievement b,.chat b{display:block;font-size:12px}.friend span,.post span,.achievement span,.chat span{display:block;color:#9ba6c5;font-size:10px;margin-top:4px}button{border:0;border-radius:10px;padding:10px 11px;background:#7568e8;color:#fff;font-weight:850;cursor:pointer}.secondary{background:#202943}.danger{background:#44243a}.inputrow{display:flex;gap:7px;margin-top:9px}.inputrow input{min-width:0;flex:1;border:1px solid #293656;background:#080b14;color:#fff;border-radius:10px;padding:10px}.feed{display:grid;gap:8px}.post .meta{display:flex;justify-content:space-between;gap:8px}.post p{margin:8px 0 0;font-size:12px;line-height:1.45}.actions{display:flex;gap:7px;margin-top:8px}.actions button{padding:7px 9px;font-size:11px}.chatlog{display:grid;gap:7px;max-height:260px;overflow:auto;margin-top:9px}.bubble{max-width:82%;padding:8px 10px;border-radius:13px;background:#202943;font-size:11px}.bubble.me{margin-left:auto;background:#332d65}.bubble small{display:block;color:#9ba6c5;margin-bottom:2px}.achievements{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.achievement.locked{opacity:.58}.progress{height:8px;background:#080b14;border:1px solid #293554;border-radius:99px;overflow:hidden;margin-top:7px}.progress>div{height:100%;background:linear-gradient(90deg,#58d5ff,#8d7cff)}.pillrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pill{padding:6px 8px;border-radius:10px;background:#1c2440;border:1px solid #344268;font-size:10px;font-weight:800}@media(max-width:600px){.stats,.grid{grid-template-columns:1fr}.achievements{grid-template-columns:1fr}.hero h1{font-size:26px}}
+</style>
+</head>
+<body><main>
+<div class="hero"><div class="ey">PIXEL CHAMPS • V70</div><h1>🌌 Cosmic Social Hub</h1><div class="muted">Profiles, friends, activity, guild chat, and achievements — built around the virtual Pixel Champs universe.</div></div>
+<div class="nav"><button onclick="show('profile')">👤 Profile</button><button class="secondary" onclick="show('friends')">👥 Friends</button><button class="secondary" onclick="show('feed')">✨ Activity</button><button class="secondary" onclick="show('chat')">💬 Guild Chat</button><button class="secondary" onclick="show('achievements')">🏆 Achievements</button></div>
+<div class="stats"><div class="stat"><b id="friendsCount">3</b><span>👥 FRIENDS</span></div><div class="stat"><b id="postsCount">4</b><span>✨ ACTIVITIES</span></div><div class="stat"><b id="achievementCount">2</b><span>🏆 UNLOCKED</span></div><div class="stat"><b id="guildLevel">1</b><span>🏰 GUILD LEVEL</span></div><div class="stat"><b id="guildMembers">1/8</b><span>🧑‍🚀 GUILD ROSTER</span></div><div class="stat"><b id="socialXP">0</b><span>🌟 SOCIAL XP</span></div></div>
+
+<section id="profile" class="card panel"><div class="profile"><div class="avatar">🧑🏽‍🚀</div><div><span class="chip">COSMIC CHAMPION</span><h2 id="playerName">Axel</h2><p class="muted" id="bio">Exploring the stars • Guild Leader • V70</p></div></div><div class="pillrow"><span class="pill">🌠 Starbound Vanguard</span><span class="pill">🏅 Guild Leader</span><span class="pill">🌌 Cosmic Explorer</span></div><div class="grid" style="margin-top:10px"><button onclick="editProfile()">✏️ Edit Profile</button><button class="secondary" onclick="shareProfile()">↗️ Share Profile</button><button class="secondary" onclick="addSocialXP(10)">⭐ Earn Social XP</button></div></section>
+
+<section id="friends" class="card panel" hidden><div class="row"><div><div style="font-size:18px;font-weight:900">👥 Friends</div><div class="muted">Build your cosmic crew and see who is online.</div></div><span class="chip" id="onlineChip">2 ONLINE</span></div><div class="grid" id="friendsList" style="margin-top:9px"></div><div class="inputrow"><input id="friendInput" maxlength="20" placeholder="Player name"><button onclick="addFriend()">➕ Add</button></div></section>
+
+<section id="feed" class="card panel" hidden><div class="row"><div><div style="font-size:18px;font-weight:900">✨ Activity Feed</div><div class="muted">Recent virtual accomplishments from your cosmic network.</div></div><button class="secondary" onclick="addPost()">＋ Post</button></div><div id="feedList" class="feed" style="margin-top:9px"></div></section>
+
+<section id="chat" class="card panel" hidden><div class="row"><div><div style="font-size:18px;font-weight:900">💬 Starbound Guild Chat</div><div class="muted">Lightweight local chat simulation for the offline prototype.</div></div><span class="chip">3 MEMBERS</span></div><div id="chatlog" class="chatlog"></div><div class="inputrow"><input id="chatInput" maxlength="120" placeholder="Message your guild"><button onclick="sendChat()">Send</button></div></section>
+
+<section id="achievements" class="card panel" hidden><div class="row"><div><div style="font-size:18px;font-weight:900">🏆 Player Achievements</div><div class="muted">Long-term goals that recognize play, teamwork, and exploration.</div></div><span class="chip" id="achChip">2 / 6</span></div><div id="achievementList" class="achievements" style="margin-top:9px"></div></section>
+
+<section class="card"><div style="font-size:16px;font-weight:900">🛡️ Social Safety</div><div class="muted" style="line-height:1.5;margin-top:5px">V70 keeps this prototype virtual-only. No real-money wagering, cash-out, or cash value. Production social features should add account authentication, server-side persistence, reporting, blocking, moderation, and age-appropriate privacy controls.</div></section>
+</main>
+<script>
+const V69='pixelChampsV69', KEY='pixelChampsV70Social';
+const old=JSON.parse(localStorage.getItem(V69)||'null')||{};
+let s=JSON.parse(localStorage.getItem(KEY)||'null')||{
+ name:'Axel',bio:'Exploring the stars • Guild Leader • V70',socialXP:0,
+ friends:[{name:'Nova Ranger',emoji:'🧑‍🚀',online:true},{name:'Moon Sentinel',emoji:'👩🏽‍🚀',online:true},{name:'Void Scout',emoji:'🧑🏾‍🚀',online:false}],
+ posts:[
+  {name:'Nova Ranger',text:'Cleared a cosmic quest with the guild! 🌌',time:'Today',likes:3,liked:false},
+  {name:'Moon Sentinel',text:'Unlocked a new Cosmic Crew title. ⭐',time:'Today',likes:5,liked:false},
+  {name:'Axel',text:'Starbound Vanguard is ready for the next mission. 🚀',time:'Today',likes:4,liked:false},
+  {name:'Void Scout',text:'Joined the guild roster and started exploring.',time:'Yesterday',likes:2,liked:false}
+ ],
+ chat:[{name:'Nova Ranger',text:'Welcome to the guild hall! 🌠'},{name:'Moon Sentinel',text:'Let’s finish the next quest together.'}],
+ achievements:{profile:true,friend:true,chat:false,feed:false,quest:false,legend:false}
+};
+const $=id=>document.getElementById(id);function save(){localStorage.setItem(KEY,JSON.stringify(s));render()}
+function show(id){document.querySelectorAll('.panel').forEach(x=>x.hidden=x.id!==id);document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('secondary',b.getAttribute('onclick')!==`show('${id}')`))}
+function addSocialXP(n){s.socialXP+=n;save();alert('⭐ +'+n+' Social XP');}
+function editProfile(){let n=prompt('Player name:',s.name);if(n&&n.trim()){s.name=n.trim().slice(0,20);let b=prompt('Profile bio:',s.bio);if(b!==null)s.bio=b.trim().slice(0,80);save()}}
+function shareProfile(){navigator.clipboard?.writeText(location.href);alert('↗️ Profile link copied for this local build.')}
+function addFriend(){let n=$('friendInput').value.trim();if(!n)return;if(s.friends.some(f=>f.name.toLowerCase()===n.toLowerCase()))return alert('That player is already on your friends list.');s.friends.push({name:n,emoji:'🌌',online:false});s.achievements.friend=true;s.socialXP+=20;$('friendInput').value='';save()}
+function toggleLike(i){s.posts[i].liked=!s.posts[i].liked;s.posts[i].likes+=s.posts[i].liked?1:-1;s.achievements.feed=true;s.socialXP+=s.posts[i].liked?2:0;save()}
+function addPost(){let t=prompt('Share an activity:');if(!t||!t.trim())return;s.posts.unshift({name:s.name,text:t.trim().slice(0,140),time:'Just now',likes:0,liked:false});s.achievements.feed=true;s.socialXP+=15;save()}
+function sendChat(){let t=$('chatInput').value.trim();if(!t)return;s.chat.push({name:s.name,text:t});s.achievements.chat=true;s.socialXP+=5;$('chatInput').value='';save()}
+const ach=[
+ ['profile','👤 Cosmic Identity','Create your player profile.',true],
+ ['friend','👥 First Connection','Add a cosmic friend.',true],
+ ['chat','💬 Guild Voice','Send a guild chat message.',false],
+ ['feed','✨ Social Spark','Create or like an activity.',false],
+ ['quest','🧭 Team Explorer','Complete a social or guild quest.',false],
+ ['legend','👑 Cosmic Legend','Reach Guild Level 8.',false]
+];
+function render(){
+ $('playerName').textContent=s.name;$('bio').textContent=s.bio;$('socialXP').textContent=s.socialXP;
+ const lvl=old.level||1, mem=(old.members?.length||1);$('guildLevel').textContent=lvl;$('guildMembers').textContent=mem+'/8';
+ $('friendsCount').textContent=s.friends.length;$('postsCount').textContent=s.posts.length;
+ const unlocked=ach.filter(a=>s.achievements[a[0]]||(a[0]==='quest'&&((old.missions?.quest||0)>0))||(a[0]==='legend'&&lvl>=8)).length;$('achievementCount').textContent=unlocked;$('achChip').textContent=unlocked+' / '+ach.length;
+ $('onlineChip').textContent=s.friends.filter(f=>f.online).length+' ONLINE';
+ $('friendsList').innerHTML=s.friends.map((f,i)=>`<div class="friend"><div class="row"><b>${f.emoji} ${esc(f.name)}</b><span>${f.online?'🟢 Online':'⚪ Offline'}</span></div><span>Cosmic Friend • ${i%2?'Astral Explorer':'Guild Ally'}</span><button class="secondary" style="width:100%;margin-top:7px" onclick="removeFriend(${i})">Remove Friend</button></div>`).join('');
+ $('feedList').innerHTML=s.posts.map((p,i)=>`<div class="post"><div class="meta"><b>🌌 ${esc(p.name)}</b><span>${esc(p.time)}</span></div><p>${esc(p.text)}</p><div class="actions"><button class="secondary" onclick="toggleLike(${i})">${p.liked?'❤️':'🤍'} ${p.likes}</button><button class="secondary" onclick="alert('Share is local in this prototype.')">↗️ Share</button></div></div>`).join('');
+ $('chatlog').innerHTML=s.chat.map(c=>`<div class="bubble ${c.name===s.name?'me':''}"><small>${esc(c.name)}</small>${esc(c.text)}</div>`).join('');$('chatlog').scrollTop=$('chatlog').scrollHeight;
+ $('achievementList').innerHTML=ach.map(a=>{let done=!!s.achievements[a[0]]||(a[0]==='quest'&&((old.missions?.quest||0)>0))||(a[0]==='legend'&&lvl>=8);return `<div class="achievement ${done?'':'locked'}"><b>${a[1]} ${done?'✓':'🔒'}</b><span>${a[2]}</span><div class="progress"><div style="width:${done?100:0}%"></div></div></div>`}).join('');
+}
+function removeFriend(i){s.friends.splice(i,1);save()}
+function esc(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+render();
+</script>
+</body></html>
