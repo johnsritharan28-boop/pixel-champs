@@ -27,6 +27,10 @@ jobs:
           rm -rf ios www
           mkdir -p www
           cp index.html www/index.html
+          cp Pixel_Champs_V77_Playable_Expansion.html www/Pixel_Champs_V77_Playable_Expansion.html
+          cp manifest.webmanifest www/manifest.webmanifest
+          cp icon.svg www/icon.svg
+          cp service-worker.js www/service-worker.js
           cat > capacitor.config.json <<'EOF'
           {
             "appId": "com.pixelchamps.game",
