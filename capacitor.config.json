@@ -1,0 +1,8 @@
+{
+  "appId": "com.pixelchamps.game",
+  "appName": "Pixel Champs",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
