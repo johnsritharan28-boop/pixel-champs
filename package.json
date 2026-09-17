@@ -5,6 +5,7 @@
   "description": "Pixel Champs iPhone-first free-to-play cosmic game",
   "scripts": {
     "build": "echo Static game shell ready for Capacitor packaging",
+    "ios:prepare": "npx cap add ios",
     "sync:ios": "npx cap sync ios",
     "open:ios": "npx cap open ios"
   },
