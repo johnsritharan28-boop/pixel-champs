@@ -9,19 +9,15 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
-
     steps:
       - name: Checkout Pixel Champs
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Install dependencies
         run: npm install
-
       - name: Prepare Capacitor web assets
         run: |
           rm -rf ios www
@@ -43,40 +39,25 @@ jobs:
           cp v89-enhancements.js www/v89-enhancements.js
           cp v90-enhancements.js www/v90-enhancements.js
           cp v91-enhancements.js www/v91-enhancements.js
+          cp v92-enhancements.js www/v92-enhancements.js
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('www/index.html')
-          text = p.read_text()
-          text = text.replace('PLAYABLE • V79', 'COSMIC • V91')
-          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script><script src="./v82-enhancements.js"></script><script src="./v83-enhancements.js"></script><script src="./v84-enhancements.js"></script><script src="./v85-enhancements.js"></script><script src="./v86-enhancements.js"></script><script src="./v87-enhancements.js"></script><script src="./v88-enhancements.js"></script><script src="./v89-enhancements.js"></script><script src="./v90-enhancements.js"></script><script src="./v91-enhancements.js"></script></head>')
+          p=Path('www/index.html'); text=p.read_text()
+          text=text.replace('PLAYABLE • V79','COSMIC • V92')
+          scripts=''.join(f'<script src="./v{i}-enhancements.js"></script>' for i in range(80,93) if i != 81)
+          text=text.replace('</head>',scripts+'</head>')
           p.write_text(text)
           PY
           cat > capacitor.config.json <<'EOF'
-          {
-            "appId": "com.pixelchamps.game",
-            "appName": "Pixel Champs",
-            "webDir": "www",
-            "bundledWebRuntime": false
-          }
+          {"appId":"com.pixelchamps.game","appName":"Pixel Champs","webDir":"www","bundledWebRuntime":false}
           EOF
-
       - name: Generate Capacitor iOS project
         run: npx cap add ios
-
       - name: Sync web app into iOS project
         run: npx cap sync ios
-
       - name: Build iOS simulator target
         run: |
-          xcodebuild \
-            -project ios/App/App.xcodeproj \
-            -scheme App \
-            -sdk iphonesimulator \
-            -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            build
-
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
       - name: Upload generated iOS project
         uses: actions/upload-artifact@v4
         with:
