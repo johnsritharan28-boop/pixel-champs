@@ -37,8 +37,8 @@ jobs:
           from pathlib import Path
           p = Path('www/index.html')
           text = p.read_text()
-          text = text.replace('PLAYABLE • V79', 'COSMIC • V81')
-          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script><script src="./v81-enhancements.js"></script></head>')
+          text = text.replace('PLAYABLE • V79', 'COSMIC • V82')
+          text = text.replace('</head>', '<script src="./v80-enhancements.js"></script><script src="./v82-enhancements.js"></script></head>')
           p.write_text(text)
           PY
           cat > capacitor.config.json <<'EOF'
