@@ -15,12 +15,15 @@ jobs:
     steps:
       - name: Checkout Pixel Champs
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install dependencies
         run: npm install
+
       - name: Prepare Capacitor web assets
         run: |
           rm -rf ios www
@@ -44,16 +47,92 @@ jobs:
           cat > capacitor.config.json <<'EOF'
           {"appId":"com.pixelchamps.game","appName":"Pixel Champs","webDir":"www","bundledWebRuntime":false}
           EOF
+
       - name: Generate Capacitor iOS project
         run: npx cap add ios
+
       - name: Sync web app into iOS project
         run: npx cap sync ios
-      - name: Build iOS simulator target
+
+      - name: Import Apple distribution signing assets
+        env:
+          IOS_DISTRIBUTION_P12: ${{ secrets.IOS_DISTRIBUTION_P12 }}
+          IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
         run: |
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-      - name: Upload generated iOS project
+          KEYCHAIN_PATH="$RUNNER_TEMP/pixel-champs-build.keychain-db"
+          P12_PATH="$RUNNER_TEMP/pixel-champs-distribution.p12"
+          PROFILE_PATH="$RUNNER_TEMP/pixel-champs.mobileprovision"
+
+          python3 - "$P12_PATH" "$PROFILE_PATH" <<'PY'
+          import base64, os, pathlib, sys
+          pathlib.Path(sys.argv[1]).write_bytes(base64.b64decode(os.environ["IOS_DISTRIBUTION_P12"]))
+          pathlib.Path(sys.argv[2]).write_bytes(base64.b64decode(os.environ["IOS_PROVISIONING_PROFILE"]))
+          PY
+
+          security create-keychain -p "" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "" "$KEYCHAIN_PATH"
+          security import "$P12_PATH" -P "$IOS_P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/"
+
+          security cms -D -i "$PROFILE_PATH" > "$RUNNER_TEMP/profile.plist"
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$RUNNER_TEMP/profile.plist")
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' "$RUNNER_TEMP/profile.plist")
+          SIGNING_IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | awk -F'"' '/Apple Distribution/ {print $2; exit}')
+
+          if [ -z "$PROFILE_NAME" ] || [ -z "$TEAM_ID" ] || [ -z "$SIGNING_IDENTITY" ]; then
+            echo "Signing setup could not find the provisioning profile, team ID, or Apple Distribution identity."
+            exit 1
+          fi
+
+          echo "PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
+          echo "TEAM_ID=$TEAM_ID" >> "$GITHUB_ENV"
+          echo "SIGNING_IDENTITY=$SIGNING_IDENTITY" >> "$GITHUB_ENV"
+
+      - name: Archive signed iOS app
+        run: |
+          xcodebuild             -project ios/App/App.xcodeproj             -scheme App             -configuration Release             -sdk iphoneos             -archivePath "$RUNNER_TEMP/PixelChamps.xcarchive"             archive             CODE_SIGN_STYLE=Manual             DEVELOPMENT_TEAM="$TEAM_ID"             CODE_SIGN_IDENTITY="$SIGNING_IDENTITY"             PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"             PRODUCT_BUNDLE_IDENTIFIER=com.pixelchamps.game
+
+      - name: Create App Store export options
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>teamID</key>
+            <string>$TEAM_ID</string>
+            <key>uploadSymbols</key>
+            <true/>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.pixelchamps.game</key>
+              <string>$PROFILE_NAME</string>
+            </dict>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Export signed IPA
+        run: |
+          rm -rf "$RUNNER_TEMP/export"
+          xcodebuild             -exportArchive             -archivePath "$RUNNER_TEMP/PixelChamps.xcarchive"             -exportPath "$RUNNER_TEMP/export"             -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
+
+      - name: Upload signed iOS build
         uses: actions/upload-artifact@v4
         with:
-          name: pixel-champs-ios-project
-          path: ios
+          name: pixel-champs-ios-signed-build
+          path: |
+            ${{ runner.temp }}/export/*.ipa
+            ${{ runner.temp }}/PixelChamps.xcarchive
           if-no-files-found: error
