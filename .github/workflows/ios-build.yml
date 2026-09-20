@@ -156,4 +156,11 @@ jobs:
             exit 1
           fi
 
-          API_PRIVATE_KEYS_DIR="$KEY_DIR"           xcrun altool             --upload-app             --type ios             --file "$IPA_PATH"             --apiKey "$APP_STORE_CONNECT_API_KEY_ID"             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"             --verbose
+          xcrun altool \
+            --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            --p8-file-path "$KEY_DIR/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8" \
+            --verbose
