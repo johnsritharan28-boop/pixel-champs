@@ -7,11 +7,14 @@
     "build": "echo Static game shell ready for Capacitor packaging",
     "ios:prepare": "npx cap add ios",
     "sync:ios": "npx cap sync ios",
+    "android:prepare": "npx cap add android",
+    "sync:android": "npx cap sync android",
     "open:ios": "npx cap open ios"
   },
   "dependencies": {
     "@capacitor/core": "latest",
-    "@capacitor/ios": "latest"
+    "@capacitor/ios": "latest",
+    "@capacitor/android": "latest"
   },
   "devDependencies": {
     "@capacitor/cli": "latest"
