@@ -2,9 +2,6 @@ name: Pixel Champs Android Build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - v80-ios-foundation
 
 permissions:
   contents: read
