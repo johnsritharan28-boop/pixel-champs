@@ -33,12 +33,12 @@ jobs:
           cp manifest.webmanifest www/manifest.webmanifest
           cp icon.svg www/icon.svg
           cp service-worker.js www/service-worker.js
-          for i in $(seq 80 92); do cp "v${i}-enhancements.js" "www/v${i}-enhancements.js"; done
+          for i in $(seq 80 93); do cp "v${i}-enhancements.js" "www/v${i}-enhancements.js"; done
           python3 - <<'PY'
           from pathlib import Path
           p = Path('www/index.html')
           text = p.read_text()
-          text = text.replace('PLAYABLE • V79', 'COSMIC • V92')
+          text = text.replace('PLAYABLE • V79', 'COSMIC • V93')
           scripts = ''.join(f'<script src="./v{i}-enhancements.js"></script>' for i in range(80, 93) if i != 81)
           if 'v92-enhancements.js' not in text:
               text = text.replace('</head>', scripts + '</head>')
