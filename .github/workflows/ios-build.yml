@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - v80-ios-foundation
+      - v93-battle-system
   workflow_dispatch:
 
 permissions:
