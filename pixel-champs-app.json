@@ -1,0 +1,15 @@
+{
+  "name": "Pixel Champs",
+  "version": "1.0.0",
+  "build": "V79",
+  "platform": "iPhone-first",
+  "gameMode": "free-to-play",
+  "virtualEconomy": true,
+  "realMoneyWagering": false,
+  "cashOut": false,
+  "realMoneyPrizes": false,
+  "coreEntry": "index.html",
+  "gameEntry": "Pixel_Champs_V77_Playable_Expansion.html",
+  "status": "test-build",
+  "next": "TestFlight packaging and real-device QA"
+}
