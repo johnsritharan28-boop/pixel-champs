@@ -98,7 +98,8 @@ jobs:
 
       - name: Archive signed iOS app
         run: |
-          xcodebuild             -project ios/App/App.xcodeproj             -scheme App             -configuration Release             -sdk iphoneos             -archivePath "$RUNNER_TEMP/PixelChamps.xcarchive"             archive             CODE_SIGN_STYLE=Manual             DEVELOPMENT_TEAM="$TEAM_ID"             CODE_SIGN_IDENTITY="$SIGNING_IDENTITY"             PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"             PRODUCT_BUNDLE_IDENTIFIER=com.pixelchamps.game
+          xcodebuild             -project ios/App/App.xcodeproj             -scheme App             -configuration Release             -sdk iphoneos             -archivePath "$RUNNER_TEMP/PixelChamps.xcarchive"             archive             CODE_SIGN_STYLE=Manual             DEVELOPMENT_TEAM="$TEAM_ID"             CODE_SIGN_IDENTITY="$SIGNING_IDENTITY"             PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"             PRODUCT_BUNDLE_IDENTIFIER=com.pixelchamps.game \
+             CURRENT_PROJECT_VERSION=${{ github.run_number }}
 
       - name: Create App Store export options
         run: |
