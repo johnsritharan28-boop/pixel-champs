@@ -2,10 +2,30 @@
   const frame = document.querySelector('.game');
   if (!frame) return;
 
+  // Register touch handlers on the iframe element and the wrapper document.
+  // WebKit/iOS can otherwise miss touch regions for embedded frames.
+  frame.addEventListener('touchstart', () => {}, { passive: true });
+  frame.addEventListener('touchend', () => {}, { passive: true });
+
   frame.addEventListener('load', () => {
     const w = frame.contentWindow;
     const d = frame.contentDocument;
     if (!w || !d) return;
+
+    // Make taps explicit for iPhone/iPad WebKit and keep scrolling available.
+    const touchStyle = d.createElement('style');
+    touchStyle.textContent = `
+      html, body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+      button, .tile, [onclick] { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+    `;
+    d.head.appendChild(touchStyle);
+
+    // WebKit workaround: a touch listener on an element in the iframe body
+    // ensures the iframe participates in the touch region calculation.
+    d.body.addEventListener('touchstart', () => {}, { passive: true });
+    d.body.addEventListener('touchend', () => {}, { passive: true });
+    d.body.addEventListener('pointerdown', () => {}, { passive: true });
+
     if (d.querySelector('[data-v93-battle]')) return;
 
     let playerHP = 120;
