@@ -9,7 +9,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg">
 <title>Pixel Champs — Cosmic Universe</title>
-<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#060812;color:#fff;font-family:Inter,system-ui,-apple-system,sans-serif;overflow:hidden}.shell{height:100%;display:flex;flex-direction:column}.top{min-height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top) 14px 0;background:#090d1bee;border-bottom:1px solid #ffffff18;backdrop-filter:blur(16px);z-index:2}.brand{font-weight:950;letter-spacing:.4px}.badge{font-size:10px;padding:6px 9px;border:1px solid #ffffff18;border-radius:99px;background:#ffffff0b;opacity:.82}.game{border:0;flex:1;width:100%;min-height:0;background:#060812}.foot{min-height:34px;flex:none;text-align:center;font-size:9px;opacity:.5;padding:7px 8px max(7px,env(safe-area-inset-bottom));background:#090d1b;border-top:1px solid #ffffff10}</style>
+<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#060812;color:#fff;font-family:Inter,system-ui,-apple-system,sans-serif;overflow:hidden}.shell{height:100%;display:flex;flex-direction:column}.top{min-height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top) 14px 0;background:#090d1bee;border-bottom:1px solid #ffffff18;backdrop-filter:blur(16px);z-index:2}.brand{font-weight:950;letter-spacing:.4px}.badge{font-size:10px;padding:6px 9px;border:1px solid #ffffff18;border-radius:99px;background:#ffffff0b;opacity:.82}.game{border:0;flex:1;width:100%;min-height:0;background:#060812;display:block;touch-action:manipulation}.foot{min-height:34px;flex:none;text-align:center;font-size:9px;opacity:.5;padding:7px 8px max(7px,env(safe-area-inset-bottom));background:#090d1b;border-top:1px solid #ffffff10}</style>
 </head>
 <body>
 <div class="shell">
@@ -18,6 +18,13 @@
 <footer class="foot">Free-to-play • Virtual rewards only • No wagering • No cash-out</footer>
 </div>
 <script>
+const frame=document.querySelector('.game');
+if(frame){
+  // iOS/WebKit iframe touch-region workaround: register touch handlers on the iframe itself.
+  frame.addEventListener('touchstart',()=>{}, {passive:true});
+  frame.addEventListener('touchend',()=>{}, {passive:true});
+  frame.addEventListener('pointerdown',()=>{}, {passive:true});
+}
 if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 </script>
 <script src="./v93-enhancements.js"></script>
