@@ -587,7 +587,7 @@ function startGame(){
   clearInterval(timer);
   timer=setInterval(()=>{time--; $("time").textContent=time;if(time<=0)endGame()},1000);
 }
-$("petsBtn").onclick=()=>{$("home").style.display="none";$("pets").style.display="block";refreshProgress()};
+const legacyPetsBtn=$("petsBtn"); if(legacyPetsBtn) legacyPetsBtn.onclick=()=>{$("home").style.display="none";$("pets").style.display="block";refreshProgress()};
 $("dailyBtn").onclick=()=>{$("home").style.display="none";$("daily").style.display="block";$("dailyStatus").textContent=""};
 $("petsHome").onclick=()=>{$("pets").style.display="none";$("home").style.display="block"};
 $("dailyHome").onclick=()=>{$("daily").style.display="none";$("home").style.display="block"};
