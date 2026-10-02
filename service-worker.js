@@ -1,5 +1,5 @@
-const CACHE = 'pixel-champs-v94';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './Pixel_Champs_V77_Playable_Expansion.html?v=94', './v93-enhancements.js?v=94'];
+const CACHE = 'pixel-champs-v95';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './Pixel_Champs_V77_Playable_Expansion.html?v=95', './v93-enhancements.js?v=95'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
