@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const key = 'pixelChampsPassportV90';
     const today = () => {
       const x = new Date();
@@ -88,5 +82,4 @@
     const title = d.querySelector('title');
     if (title) title.textContent = 'Pixel Champs V90 — Cosmic Passport';
     w.render();
-  });
 })();
