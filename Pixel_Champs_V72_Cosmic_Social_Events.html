@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pixel Champs V72 — Cosmic Social Events</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 18% 0%,#3a2d79 0,#10162f 42%,#060812 100%);color:#f7f8ff;min-height:100vh}button{font:inherit}.wrap{max-width:1040px;margin:auto;padding:18px}.hero,.card{border:1px solid #ffffff18;background:#ffffff0b;box-shadow:0 14px 45px #0006}.hero{padding:22px;border-radius:25px}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.65}.title{font-size:clamp(30px,6vw,58px);font-weight:900;margin:6px 0}.sub{opacity:.74;line-height:1.5}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:18px}.stat{padding:12px;border-radius:15px;background:#05071399;border:1px solid #ffffff12}.stat b{display:block;font-size:21px;margin-top:3px}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}.card{padding:17px;border-radius:20px}.card h2{margin:0 0 12px;font-size:20px}.events{display:grid;gap:10px}.event{padding:15px;border-radius:17px;background:#05071388;border:1px solid #ffffff12}.event-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.tag{font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.6}.event h3{margin:3px 0 5px;font-size:19px}.reward{font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.btn{border:1px solid #ffffff1c;border-radius:12px;padding:10px 13px;background:#ffffff12;color:#fff;cursor:pointer;font-weight:750}.btn.primary{background:linear-gradient(135deg,#7b5cff,#2fc6e8)}.btn.good{background:#20a77933}.btn:disabled{opacity:.45;cursor:not-allowed}.progress{height:8px;background:#ffffff12;border-radius:99px;overflow:hidden;margin-top:9px}.bar{height:100%;background:linear-gradient(90deg,#8b63ff,#39d7ee);border-radius:99px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #ffffff10}.row:last-child{border-bottom:0}.left{display:flex;align-items:center;gap:10px}.mini{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#ffffff12;font-size:22px}.mission{padding:12px;border-radius:14px;background:#ffffff08;margin:8px 0}.mission-line{display:flex;justify-content:space-between;gap:8px}.badge{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#ffffff12;font-size:22px}.feed{display:grid;gap:9px}.post{padding:11px;border-radius:14px;background:#05071377;border:1px solid #ffffff10}.note{font-size:12px;opacity:.6;line-height:1.5}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);padding:12px 16px;border-radius:14px;background:#101426ee;border:1px solid #ffffff22;box-shadow:0 12px 40px #0008;transition:.25s;z-index:9}.toast.show{transform:translateX(-50%) translateY(0)}.footer{text-align:center;opacity:.45;font-size:12px;padding:22px 0}@media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.wrap{padding:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="eyebrow">Pixel Champs • V72</div>
+<div class="title">🌠 Cosmic Social Events</div>
+<div class="sub">A rotating event layer for the Social League. Complete friendly activities, build event progress, collect fictional rewards and unlock event badges.</div>
+<div class="stats">
+<div class="stat"><span>Event Level</span><b id="level">1</b></div>
+<div class="stat"><span>Event XP</span><b id="xp">0</b></div>
+<div class="stat"><span>Event Dust</span><b id="dust">0</b></div>
+<div class="stat"><span>Social</span><b id="social">0</b></div>
+<div class="stat"><span>Badges</span><b id="badges">0</b></div>
+</div>
+</section>
+
+<div class="grid">
+<div>
+<section class="card">
+<h2>⚡ Featured Event</h2>
+<div class="event">
+<div class="event-top"><div><div class="tag">Limited local event</div><h3 id="featuredName">Constellation Connect</h3><div class="sub" id="featuredDesc">Complete social actions to fill the constellation.</div></div><div class="badge" id="featuredIcon">✨</div></div>
+<div class="progress"><div class="bar" id="eventBar" style="width:0%"></div></div>
+<div class="note" id="eventMeta">0 / 100 event progress</div>
+<div class="actions"><button class="btn primary" onclick="eventAction()">🚀 Do Event Action</button><button class="btn" onclick="claimEvent()" id="claimBtn">🎁 Claim Reward</button></div>
+</div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🌌 Event Board</h2>
+<div class="events" id="eventBoard"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>📡 Event Activity</h2>
+<div class="feed" id="feed"></div>
+</section>
+</div>
+
+<div>
+<section class="card">
+<h2>🎯 Event Missions</h2>
+<div id="missions"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🏅 Event Badges</h2>
+<div id="badgeList"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🎁 Daily Event Bonus</h2>
+<div class="note">One fictional bonus per local calendar day.</div>
+<div class="actions"><button class="btn primary" onclick="dailyBonus()" id="dailyBtn">Claim Daily Bonus</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🛰️ Social League Link</h2>
+<div class="note">Friendly event actions also build your Social reputation and points. This is a local progression prototype, not a real leaderboard.</div>
+<div class="actions"><button class="btn good" onclick="leagueAction()">⭐ League Action</button></div>
+</section>
+</div>
+</div>
+
+<section class="card" style="margin-top:14px">
+<h2>🔒 Fair Play Note</h2>
+<p class="note">V72 is fictional, local-only gameplay. Event rewards have no cash value. There is no wagering, cash-out, real-money prize, or real-time social chat.</p>
+</section>
+<div class="footer">Pixel Champs V72 • Cosmic Social Events • Local prototype save</div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY='pixelChampsV72';
+const defaultState={level:1,xp:0,dust:0,social:0,event:0,claimed:false,badges:[],feed:[{icon:'🌠',text:'Welcome to Cosmic Social Events!',time:'Just now'}],missions:{action:0,league:0,daily:0},dailyDay:''};
+let s=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultState);
+const events=[
+ {name:'Constellation Connect',icon:'✨',desc:'Complete friendly social actions.',goal:100,reward:100},
+ {name:'Nebula Neighbors',icon:'🤝',desc:'Build your cosmic network with positive interactions.',goal:120,reward:125},
+ {name:'Starlight Showcase',icon:'🏅',desc:'Showcase achievements and League progress.',goal:150,reward:150}
+];
+function today(){return new Date().toISOString().slice(0,10)}
+function save(){localStorage.setItem(KEY,JSON.stringify(s));render()}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove('show'),1800)}
+function addFeed(icon,text){s.feed.unshift({icon,text,time:'Just now'});s.feed=s.feed.slice(0,10)}
+function addXP(n){s.xp+=n;while(s.level<5&&s.xp>=s.level*200){s.xp-=s.level*200;s.level++;s.social+=20;addFeed('⬆️',`Event Level ${s.level} reached! +20 Social`)}}
+function eventAction(){const e=events[(s.level-1)%events.length];s.event=Math.min(e.goal,s.event+25);s.xp+=30;s.social+=8;s.missions.action=Math.min(4,s.missions.action+1);addFeed(e.icon,`You completed a ${e.name} action. +25 Event Progress`);checkMissions();save();toast('Event progress +25!')}
+function claimEvent(){const e=events[(s.level-1)%events.length];if(s.event<e.goal){toast(`Need ${e.goal-s.event} more event progress`);return}if(s.claimed){toast('Featured event reward already claimed');return}s.claimed=true;s.dust+=e.reward;s.social+=25;s.badges.push({icon:e.icon,name:e.name+' Champion'});addFeed('🎁',`Featured event reward claimed. +${e.reward} Dust`);save();toast('Event reward claimed!')}
+function leagueAction(){s.social+=12;s.missions.league=Math.min(3,s.missions.league+1);addXP(20);addFeed('⭐','Friendly League action completed. +12 Social');checkMissions();save()}
+function dailyBonus(){const d=today();if(s.dailyDay===d){toast('Daily bonus already claimed');return}s.dailyDay=d;s.dust+=30;s.social+=10;s.missions.daily=1;addXP(15);addFeed('🎁','Daily Event Bonus claimed. +30 Dust');checkMissions();save();toast('Daily bonus claimed!')}
+function checkMissions(){const wins=[];if(s.missions.action>=4)wins.push(['Event Runner','🚀','Completed 4 event actions']);if(s.missions.league>=3)wins.push(['League Link','⭐','Completed 3 League actions']);if(s.missions.daily>=1)wins.push(['Daily Signal','🎁','Claimed a daily event bonus']);wins.forEach(a=>{if(!s.badges.some(b=>b.name===a[0])){s.badges.push({icon:a[1],name:a[0]});s.dust+=40;s.social+=15;addXP(25);addFeed(a[1],`${a[0]} badge unlocked! +40 Dust`)}})}
+function render(){const e=events[(s.level-1)%events.length];document.getElementById('level').textContent=s.level;document.getElementById('xp').textContent=s.xp;document.getElementById('dust').textContent=s.dust;document.getElementById('social').textContent=s.social;document.getElementById('badges').textContent=s.badges.length;document.getElementById('featuredName').textContent=e.name;document.getElementById('featuredDesc').textContent=e.desc;document.getElementById('featuredIcon').textContent=e.icon;document.getElementById('eventBar').style.width=(s.event/e.goal*100)+'%';document.getElementById('eventMeta').textContent=`${s.event} / ${e.goal} event progress • Reward ${e.reward} Dust`;document.getElementById('claimBtn').disabled=s.event<e.goal||s.claimed;document.getElementById('claimBtn').textContent=s.claimed?'Reward Claimed':'🎁 Claim Reward';document.getElementById('eventBoard').innerHTML=events.map((x,i)=>`<div class="event"><div class="event-top"><div><div class="tag">Event ${i+1}</div><h3>${x.icon} ${x.name}</h3><div class="note">${x.desc}</div></div><div class="reward">+${x.reward} Dust</div></div></div>`).join('');document.getElementById('feed').innerHTML=s.feed.map(p=>`<div class="post"><span style="font-size:22px;margin-right:7px">${p.icon}</span>${p.text}<br><span class="note">${p.time}</span></div>`).join('');const ms=[['action','🚀 Complete 4 event actions',4],['league','⭐ Complete 3 League actions',3],['daily','🎁 Claim 1 daily bonus',1]];document.getElementById('missions').innerHTML=ms.map(m=>{const p=Math.min(m[2],s.missions[m[0]]);return `<div class="mission"><div class="mission-line"><b>${m[1]}</b><b>${p}/${m[2]}</b></div><div class="progress"><div class="bar" style="width:${p/m[2]*100}%"></div></div></div>`}).join('');document.getElementById('badgeList').innerHTML=s.badges.length?s.badges.map(b=>`<div class="row"><div class="left"><div class="mini">${b.icon}</div><div><b>${b.name}</b><div class="note">Event achievement</div></div></div></div>`).join(''):'<div class="note">No event badges yet. Complete event missions to unlock them.</div>';const claimed=s.dailyDay===today();document.getElementById('dailyBtn').disabled=claimed;document.getElementById('dailyBtn').textContent=claimed?'Daily Bonus Claimed':'Claim Daily Bonus'}
+render();
+</script>
+</body>
+</html>

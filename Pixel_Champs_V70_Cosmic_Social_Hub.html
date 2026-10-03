@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pixel Champs V70 — Cosmic Social Hub</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% 0%,#273469 0,#10142b 38%,#070914 100%);color:#f7f8ff;min-height:100vh}button{font:inherit}.wrap{max-width:980px;margin:auto;padding:20px}.hero{padding:22px;border:1px solid #ffffff22;border-radius:24px;background:#ffffff0d;box-shadow:0 18px 60px #0008}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.7}.title{font-size:clamp(30px,6vw,54px);font-weight:900;margin:6px 0}.sub{opacity:.75;line-height:1.5}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.stat{padding:12px;border-radius:16px;background:#05071388;border:1px solid #ffffff16}.stat b{display:block;font-size:22px}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}.card{padding:18px;border:1px solid #ffffff18;border-radius:20px;background:#ffffff0a;box-shadow:0 10px 30px #0005}.card h2{margin:0 0 12px;font-size:20px}.profile{display:flex;align-items:center;gap:14px}.avatar{width:68px;height:68px;border-radius:20px;display:grid;place-items:center;font-size:34px;background:linear-gradient(145deg,#5b3cc4,#22b8cf);box-shadow:0 8px 30px #0006}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff15;font-size:12px;margin:3px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.btn{border:0;border-radius:13px;padding:11px 14px;background:#ffffff14;color:#fff;border:1px solid #ffffff1c;cursor:pointer;font-weight:750}.btn:active{transform:scale(.98)}.btn.primary{background:linear-gradient(135deg,#7c5cff,#2fc5e8)}.btn.good{background:#20a77933}.btn.danger{background:#d94a6330}.friend{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #ffffff10}.friend:last-child{border-bottom:0}.friend-left{display:flex;align-items:center;gap:10px}.mini{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#ffffff12;font-size:22px}.online{width:8px;height:8px;border-radius:50%;display:inline-block;background:#5ee6a8;margin-left:5px}.feed{display:grid;gap:10px}.post{padding:12px;border-radius:15px;background:#05071377;border:1px solid #ffffff10}.post small{opacity:.55}.mission{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;background:#ffffff08;margin:8px 0}.progress{height:8px;background:#ffffff12;border-radius:99px;overflow:hidden;margin-top:8px}.bar{height:100%;background:linear-gradient(90deg,#8b63ff,#39d7ee);border-radius:99px}.achievement{display:flex;gap:10px;align-items:center;padding:10px 0}.badge{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#ffffff12;font-size:21px}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);padding:12px 16px;border-radius:14px;background:#101426ee;border:1px solid #ffffff22;box-shadow:0 12px 40px #0008;transition:.25s;z-index:5}.toast.show{transform:translateX(-50%) translateY(0)}.footer{opacity:.5;text-align:center;font-size:12px;padding:22px 0}.note{font-size:12px;opacity:.6;line-height:1.5}@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.wrap{padding:12px}.hero{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="eyebrow">Pixel Champs • V70</div>
+<div class="title">🌌 Cosmic Social Hub</div>
+<div class="sub">A social layer for your cosmic universe — profiles, friends, activity, achievements, guild snapshots and friendly interactions.</div>
+<div class="stats">
+<div class="stat"><span>Cosmic Level</span><b id="level">1</b></div>
+<div class="stat"><span>Star Dust</span><b id="dust">300</b></div>
+<div class="stat"><span>Social Points</span><b id="social">0</b></div>
+<div class="stat"><span>Friends</span><b id="friendCount">0</b></div>
+</div>
+</section>
+
+<div class="grid">
+<div>
+<section class="card">
+<h2>👤 Your Cosmic Profile</h2>
+<div class="profile"><div class="avatar" id="avatar">🌠</div><div><h3 id="name" style="margin:0 0 4px">Starbound Champ</h3><div><span class="pill" id="title">Cosmic Explorer</span><span class="pill">Level <span id="level2">1</span></span></div></div></div>
+<div class="actions"><button class="btn primary" onclick="editProfile()">Edit Profile</button><button class="btn" onclick="postActivity()">✨ Post Activity</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🛰️ Activity Feed</h2>
+<div id="feed" class="feed"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🏆 Achievement Showcase</h2>
+<div id="achievements"></div>
+</section>
+</div>
+
+<div>
+<section class="card">
+<h2>⭐ Friends</h2>
+<div id="friends"></div>
+<div class="actions"><button class="btn primary" onclick="addFriend()">＋ Add Cosmic Friend</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🌠 Guild Snapshot</h2>
+<div style="font-size:24px;font-weight:850" id="guildName">🌠 Starbound Vanguard</div>
+<div class="sub" id="guildMeta">Guild Level 1 • 1/8 members</div>
+<div class="actions"><button class="btn" onclick="guildAction('battle')">⚔️ Guild Battle</button><button class="btn" onclick="guildAction('quest')">📜 Guild Quest</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🎯 Social Missions</h2>
+<div id="missions"></div>
+</section>
+</div>
+</div>
+
+<section class="card" style="margin-top:14px">
+<h2>💫 Social Actions</h2>
+<div class="actions"><button class="btn primary" onclick="cheerFriend()">💜 Cheer a Friend</button><button class="btn" onclick="viewProfile()">🔭 View a Profile</button><button class="btn" onclick="shareAchievement()">🏅 Showcase Achievement</button></div>
+<p class="note">All interactions in this V70 prototype are fictional, local-only and have no cash value. No real-time chat, wagering, cash-out, or real-money social rewards are used.</p>
+</section>
+<div class="footer">Pixel Champs V70 • Cosmic Social Hub • Local prototype save</div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY='pixelChampsV70';
+const defaultState={name:'Starbound Champ',title:'Cosmic Explorer',avatar:'🌠',level:1,dust:300,social:0,friends:[],feed:[{icon:'🌌',text:'Welcome to the Cosmic Social Hub!',time:'Just now'}],achievements:[{icon:'🌟',name:'First Arrival',desc:'Entered the Social Hub'}],missions:{cheer:0,profile:0,post:0}};
+let s=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultState);
+const pool=[['Nova Ranger','🚀'],['Moon Sentinel','🌙'],['Solar Striker','☀️'],['Void Scout','🪐'],['Meteor Knight','☄️'],['Astral Mystic','🔮'],['Orbit Guardian','🛡️'],['Star Phoenix','🪽']];
+function save(){localStorage.setItem(KEY,JSON.stringify(s));render()}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove('show'),1800)}
+function addFeed(icon,text){s.feed.unshift({icon,text,time:'Just now'});s.feed=s.feed.slice(0,8)}
+function addFriend(){if(s.friends.length>=7){toast('Friend list is full for this prototype');return}const used=s.friends.map(x=>x.name);const item=pool.find(x=>!used.includes(x[0]))||pool[Math.floor(Math.random()*pool.length)];s.friends.push({name:item[0],icon:item[1]});addFeed('🤝',`You added ${item[0]} as a cosmic friend.`);toast('Cosmic friend added!');save()}
+function removeFriend(i){const f=s.friends[i];s.friends.splice(i,1);addFeed('👋',`You removed ${f.name} from your friend list.`);save()}
+function cheerFriend(){if(!s.friends.length){toast('Add a friend first');return}s.social+=10;s.missions.cheer=Math.min(3,s.missions.cheer+1);addFeed('💜',`You sent a cosmic cheer to ${s.friends[Math.floor(Math.random()*s.friends.length)].name}. +10 Social`);checkMission();save()}
+function viewProfile(){s.social+=5;s.missions.profile=Math.min(3,s.missions.profile+1);addFeed('🔭','You explored a cosmic Champ profile. +5 Social');checkMission();save()}
+function postActivity(){s.social+=5;s.missions.post=1;addFeed('📡','You posted a new cosmic activity update. +5 Social');checkMission();save()}
+function shareAchievement(){s.social+=8;addFeed('🏅','You showcased an achievement to your cosmic network. +8 Social');save()}
+function editProfile(){const n=prompt('Choose your display name:',s.name);if(n&&n.trim()){s.name=n.trim().slice(0,24);const t=prompt('Choose your title:',s.title);if(t&&t.trim())s.title=t.trim().slice(0,28);addFeed('✏️','You updated your cosmic profile.');save()}}
+function guildAction(type){if(type==='battle'){s.dust+=40;s.social+=5;addFeed('⚔️','Your guild completed a friendly battle snapshot. +40 Dust')}else{s.dust+=55;s.social+=5;addFeed('📜','Your guild completed a quest snapshot. +55 Dust')}save();toast('Guild progress recorded!')}
+function checkMission(){if(s.missions.cheer>=3&&!s.achievements.some(a=>a.name==='Social Spark')){s.achievements.push({icon:'💜',name:'Social Spark',desc:'Cheered 3 cosmic friends'});s.dust+=50;toast('Mission complete! +50 Dust')}if(s.missions.profile>=3&&!s.achievements.some(a=>a.name==='Star Observer')){s.achievements.push({icon:'🔭',name:'Star Observer',desc:'Viewed 3 cosmic profiles'});s.dust+=50;toast('Mission complete! +50 Dust')}if(s.missions.post>=1&&!s.achievements.some(a=>a.name==='Signal Flare')){s.achievements.push({icon:'📡',name:'Signal Flare',desc:'Posted a cosmic activity');s.dust+=50}}
+function render(){document.getElementById('name').textContent=s.name;document.getElementById('title').textContent=s.title;document.getElementById('avatar').textContent=s.avatar;document.getElementById('level').textContent=s.level;document.getElementById('level2').textContent=s.level;document.getElementById('dust').textContent=s.dust;document.getElementById('social').textContent=s.social;document.getElementById('friendCount').textContent=s.friends.length;document.getElementById('friends').innerHTML=s.friends.length?s.friends.map((f,i)=>`<div class="friend"><div class="friend-left"><div class="mini">${f.icon}</div><div><b>${f.name}</b><div class="note">Online <span class="online"></span></div></div></div><button class="btn danger" onclick="removeFriend(${i})">Remove</button></div>`).join(''):'<div class="note">No cosmic friends yet. Add one to start building your network.</div>';document.getElementById('feed').innerHTML=s.feed.map(p=>`<div class="post"><div style="font-size:22px;display:inline-block;margin-right:8px">${p.icon}</div>${p.text}<br><small>${p.time}</small></div>`).join('');document.getElementById('achievements').innerHTML=s.achievements.map(a=>`<div class="achievement"><div class="badge">${a.icon}</div><div><b>${a.name}</b><div class="note">${a.desc}</div></div></div>`).join('');const ms=[['cheer','💜 Cheer 3 friends',3],['profile','🔭 View 3 profiles',3],['post','📡 Post 1 activity',1]];document.getElementById('missions').innerHTML=ms.map(m=>{const p=Math.min(m[2],s.missions[m[0]]);return `<div class="mission"><div style="flex:1"><b>${m[1]}</b><div class="progress"><div class="bar" style="width:${p/m[2]*100}%"></div></div></div><b>${p}/${m[2]}</b></div>`}).join('');document.getElementById('guildMeta').textContent=`Guild Level 1 • ${Math.min(8,s.friends.length+1)}/8 members`}
+render();
+</script>
+</body>
+</html>

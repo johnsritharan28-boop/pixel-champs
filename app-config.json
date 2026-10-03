@@ -1,0 +1,17 @@
+{
+  "appName": "Pixel Champs",
+  "bundleIdentifier": "com.pixelchamps.game",
+  "version": "1.0.0",
+  "build": "80",
+  "platform": "ios",
+  "orientation": "portrait",
+  "entry": "index.html",
+  "gameEntry": "Pixel_Champs_V77_Playable_Expansion.html",
+  "freeToPlay": true,
+  "virtualRewardsOnly": true,
+  "realMoneyWagering": false,
+  "cashOut": false,
+  "realMoneyPrizes": false,
+  "status": "native-wrapper-foundation",
+  "releaseGate": "real-device-qa"
+}
