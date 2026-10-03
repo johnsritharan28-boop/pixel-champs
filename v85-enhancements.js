@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d) return;
-
+  const w=window;
+    const d=document;
     const battle = d.querySelector('#battle .card');
     if (!battle) return;
 
@@ -68,5 +62,4 @@
     const title = d.querySelector('title');
     if (title) title.textContent = 'Pixel Champs V85 — Cosmic Universe';
     w.render();
-  });
 })();
