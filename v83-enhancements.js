@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const progression = [
       { stage: 1, xp: 0, wins: 0, label: 'Awakened Vanguard', emoji: '🌙' },
       { stage: 2, xp: 250, wins: 3, label: 'Starlight Vanguard', emoji: '✨' },
@@ -46,5 +40,4 @@
     if (title) title.textContent = 'Pixel Champs V83 — Cosmic Universe';
 
     w.render();
-  });
 })();
