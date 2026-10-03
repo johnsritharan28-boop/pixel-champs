@@ -1,17 +1,11 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
   const localDay = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   };
 
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d) return;
-
+  const w=window;
+    const d=document;
     // V81: persist Arena completion by local calendar day so a reload cannot farm rewards.
     const arenaKey = 'pixelChampsArenaV81';
     let arena = JSON.parse(localStorage.getItem(arenaKey) || 'null') || { day:'', hp:300, cleared:false };
@@ -58,5 +52,4 @@
         w.toast(`Titan hit! ${arena.hp} HP remaining`);
       }
     };
-  });
 })();
