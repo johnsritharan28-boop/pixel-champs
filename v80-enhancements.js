@@ -1,17 +1,11 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
   const localDay = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   };
 
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d) return;
-
+  const w=window;
+    const d=document;
     // V82: daily rewards and the fictional spin use the player's local calendar day.
     w.daily = function () {
       const day = localDay();
@@ -110,5 +104,4 @@
     if (title) title.textContent = 'Pixel Champs V82 — Cosmic Universe';
 
     w.render();
-  });
 })();
