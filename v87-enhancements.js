@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const signs = [
       ['Aries','♈','Flame Rush',90],['Taurus','♉','Cosmic Guard',80],['Gemini','♊','Twin Strike',105],
       ['Cancer','♋','Lunar Shell',85],['Leo','♌','Solar Roar',120],['Virgo','♍','Astral Precision',110],
@@ -50,5 +44,4 @@
     const title = d.querySelector('title');
     if (title) title.textContent = 'Pixel Champs V87 — Cosmic Universe';
     w.render();
-  });
 })();
