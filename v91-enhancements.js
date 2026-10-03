@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const home = d.querySelector('#home');
     if (!home) return;
     d.querySelector('[data-v91-social]')?.remove();
@@ -73,5 +67,4 @@
     const title = d.querySelector('title');
     if (title) title.textContent = 'Pixel Champs V91 — Cosmic Social Hub';
     w.render();
-  });
 })();
