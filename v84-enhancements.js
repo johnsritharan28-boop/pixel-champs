@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
     const getCount = () => Array.isArray(w.s.signs) ? new Set(w.s.signs).size : 0;
 
@@ -46,5 +40,4 @@
     if (title) title.textContent = 'Pixel Champs V84 — Cosmic Universe';
 
     w.render();
-  });
 })();
