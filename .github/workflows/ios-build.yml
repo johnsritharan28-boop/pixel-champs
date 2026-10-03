@@ -31,24 +31,10 @@ jobs:
           rm -rf ios www
           mkdir -p www
           cp index.html www/index.html
-          cp Pixel_Champs_V77_Playable_Expansion.html www/Pixel_Champs_V77_Playable_Expansion.html
           cp manifest.webmanifest www/manifest.webmanifest
           cp icon.svg www/icon.svg
           cp service-worker.js www/service-worker.js
           for i in $(seq 80 93); do cp "v${i}-enhancements.js" "www/v${i}-enhancements.js"; done
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('www/index.html')
-          text = p.read_text()
-          text = text.replace('PLAYABLE • V79', 'COSMIC • V93')
-          scripts = ''.join(f'<script src="./v{i}-enhancements.js"></script>' for i in range(80, 93) if i != 81)
-          if 'v92-enhancements.js' not in text:
-              text = text.replace('</head>', scripts + '</head>')
-          p.write_text(text)
-          PY
-          cat > capacitor.config.json <<'EOF'
-          {"appId":"com.pixelchamps.game","appName":"Pixel Champs","webDir":"www","bundledWebRuntime":false}
-          EOF
 
       - name: Generate Capacitor iOS project
         run: npx cap add ios
