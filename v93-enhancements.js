@@ -4,11 +4,54 @@
   d.documentElement.style.touchAction='manipulation';
   d.body.style.touchAction='manipulation';
   const style=d.createElement('style');
-  style.textContent='html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button,.tile,[onclick]{touch-action:manipulation;-webkit-user-select:none;user-select:none}';
+  style.textContent='html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button,.tile,[onclick]{touch-action:manipulation;-webkit-user-select:none;user-select:none}button:disabled{opacity:.55}';
   d.head.appendChild(style);
 
-  // The game is direct DOM in iOS; normal WebKit click/tap handling is preserved.
-  // No iframe tap bridge or click suppression is used.
+  // iPhone/iPad tap reliability: keep the normal DOM click path, but provide
+  // one controlled fallback for touch releases. The fallback only runs when
+  // the browser does not successfully deliver the native click, and it
+  // suppresses the duplicate native click that WebKit may emit afterward.
+  if(!w.__pcTouchFallbackInstalled){
+    w.__pcTouchFallbackInstalled=true;
+    const down=new Map(),synthetic=new WeakSet();
+    let syntheticDispatch=false;
+    const actionable=target=>{
+      if(!target||!target.closest)return null;
+      const el=target.closest('button,[onclick],.tile');
+      if(!el||el.disabled)return null;
+      return el;
+    };
+    d.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='touch')return;
+      const el=actionable(e.target);
+      if(!el)return;
+      down.set(e.pointerId,{el,x:e.clientX,y:e.clientY});
+    },true);
+    d.addEventListener('pointerup',e=>{
+      if(e.pointerType!=='touch')return;
+      const info=down.get(e.pointerId);down.delete(e.pointerId);
+      if(!info)return;
+      const el=actionable(e.target);
+      const moved=Math.hypot(e.clientX-info.x,e.clientY-info.y)>12;
+      if(!el||el!==info.el||moved)return;
+      if(el.dataset.pcTouchBusy==='1')return;
+      el.dataset.pcTouchBusy='1';
+      synthetic.add(el);
+      syntheticDispatch=true;
+      try{el.click();}finally{syntheticDispatch=false;}
+      setTimeout(()=>{synthetic.delete(el);el.dataset.pcTouchBusy='';},700);
+    },true);
+    d.addEventListener('pointercancel',e=>{down.delete(e.pointerId)},true);
+    d.addEventListener('click',e=>{
+      const el=actionable(e.target);
+      if(!el||!synthetic.has(el))return;
+      if(syntheticDispatch)return;
+      // WebKit's native click after our touch fallback would fire the action a second time.
+      synthetic.delete(el);
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    },true);
+  }
 
   if(d.querySelector('[data-v93-battle]'))return;
   let playerHP=120,battleLocked=false;
