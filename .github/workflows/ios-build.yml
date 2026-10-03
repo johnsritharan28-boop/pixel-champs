@@ -53,6 +53,20 @@ jobs:
       - name: Generate Capacitor iOS project
         run: npx cap add ios
 
+      - name: Declare exempt encryption for App Store Connect
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('ios/App/App/Info.plist')
+          text = p.read_text() if p.exists() else ''
+          key = '<key>ITSAppUsesNonExemptEncryption</key>'
+          if p.exists() and key not in text:
+              text = text.replace('</dict>', '  <key>ITSAppUsesNonExemptEncryption</key>\n  <false/>\n</dict>', 1)
+              p.write_text(text)
+          elif not p.exists():
+              raise SystemExit('Generated iOS Info.plist not found at ios/App/App/Info.plist')
+          PY
+
       - name: Sync web app into iOS project
         run: npx cap sync ios
 
