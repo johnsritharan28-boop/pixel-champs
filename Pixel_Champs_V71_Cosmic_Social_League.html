@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pixel Champs V71 — Cosmic Social League</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 15% 0%,#2b3d7a 0,#10152f 42%,#060812 100%);color:#f7f8ff;min-height:100vh}button{font:inherit}.wrap{max-width:1000px;margin:auto;padding:18px}.hero,.card{border:1px solid #ffffff18;background:#ffffff0b;box-shadow:0 14px 45px #0006}.hero{padding:22px;border-radius:24px}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.68}.title{font-size:clamp(30px,6vw,56px);font-weight:900;margin:6px 0}.sub{opacity:.74;line-height:1.5}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.stat{padding:12px;border-radius:15px;background:#05071399;border:1px solid #ffffff12}.stat b{display:block;font-size:22px;margin-top:3px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:14px}.card{padding:17px;border-radius:20px}.card h2{margin:0 0 12px;font-size:20px}.profile{display:flex;align-items:center;gap:13px}.avatar{width:66px;height:66px;border-radius:19px;display:grid;place-items:center;font-size:34px;background:linear-gradient(145deg,#6d4cff,#20bfd6)}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff14;font-size:12px;margin:3px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.btn{border:1px solid #ffffff1c;border-radius:12px;padding:10px 13px;background:#ffffff12;color:#fff;cursor:pointer;font-weight:750}.btn.primary{background:linear-gradient(135deg,#795cff,#2fc6e8)}.btn.good{background:#20a77933}.btn:active{transform:scale(.98)}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #ffffff10}.row:last-child{border-bottom:0}.left{display:flex;align-items:center;gap:10px}.mini{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#ffffff12;font-size:21px}.online{width:8px;height:8px;border-radius:50%;display:inline-block;background:#5ee6a8;margin-left:5px}.feed{display:grid;gap:9px}.post{padding:11px;border-radius:14px;background:#05071377;border:1px solid #ffffff10}.post small{opacity:.5}.progress{height:8px;background:#ffffff12;border-radius:99px;overflow:hidden;margin-top:8px}.bar{height:100%;background:linear-gradient(90deg,#8b63ff,#39d7ee);border-radius:99px}.mission{padding:11px;border-radius:14px;background:#ffffff08;margin:8px 0}.league{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rank{padding:13px;border-radius:15px;background:#05071388;border:1px solid #ffffff12}.rank strong{font-size:22px}.achievement{display:flex;gap:10px;align-items:center;padding:9px 0}.badge{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#ffffff12;font-size:21px}.note{font-size:12px;opacity:.6;line-height:1.5}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);padding:12px 16px;border-radius:14px;background:#101426ee;border:1px solid #ffffff22;box-shadow:0 12px 40px #0008;transition:.25s;z-index:9}.toast.show{transform:translateX(-50%) translateY(0)}.footer{text-align:center;opacity:.45;font-size:12px;padding:22px 0}@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.league{grid-template-columns:1fr}.wrap{padding:11px}.hero{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="eyebrow">Pixel Champs • V71</div>
+<div class="title">🏟️ Cosmic Social League</div>
+<div class="sub">Turn the Social Hub into a friendly progression layer: build reputation, complete social missions, climb a fictional local league and showcase achievements.</div>
+<div class="stats">
+<div class="stat"><span>Social Level</span><b id="level">1</b></div>
+<div class="stat"><span>Social XP</span><b id="xp">0</b></div>
+<div class="stat"><span>Social Points</span><b id="social">0</b></div>
+<div class="stat"><span>Friends</span><b id="friendCount">0</b></div>
+</div>
+</section>
+
+<div class="grid">
+<div>
+<section class="card">
+<h2>👤 Your Cosmic Profile</h2>
+<div class="profile"><div class="avatar" id="avatar">🌠</div><div><h3 id="name" style="margin:0 0 4px">Starbound Champ</h3><span class="pill" id="title">Cosmic Explorer</span><span class="pill">Social Lv. <span id="level2">1</span></span></div></div>
+<div class="actions"><button class="btn primary" onclick="editProfile()">Edit Profile</button><button class="btn" onclick="postActivity()">✨ Post Activity</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🏆 Social League</h2>
+<div class="league">
+<div class="rank"><div class="note">Current Division</div><strong id="division">🌟 Stardust</strong><div class="note" id="divisionMeta">0 XP to next division</div></div>
+<div class="rank"><div class="note">Weekly Reputation</div><strong id="rep">0</strong><div class="note">Earned from friendly actions</div></div>
+</div>
+<div class="progress"><div class="bar" id="leagueBar" style="width:0%"></div></div>
+<div class="actions"><button class="btn primary" onclick="leagueChallenge()">⚡ League Challenge</button><button class="btn" onclick="claimLeagueBonus()">🎁 Daily League Bonus</button></div>
+<p class="note">The league is a fictional in-game progression system. It has no cash value and does not rank real people.</p>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🛰️ Activity Feed</h2>
+<div id="feed" class="feed"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🏅 Achievement Showcase</h2>
+<div id="achievements"></div>
+</section>
+</div>
+
+<div>
+<section class="card">
+<h2>⭐ Friends Network</h2>
+<div id="friends"></div>
+<div class="actions"><button class="btn primary" onclick="addFriend()">＋ Add Cosmic Friend</button><button class="btn" onclick="cheerFriend()">💜 Cheer</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🎯 Social Missions</h2>
+<div id="missions"></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🌠 Guild Snapshot</h2>
+<div style="font-size:23px;font-weight:850" id="guildName">🌠 Starbound Vanguard</div>
+<div class="sub" id="guildMeta">Guild Level 1 • 1/8 members</div>
+<div class="actions"><button class="btn" onclick="guildAction('battle')">⚔️ Friendly Battle</button><button class="btn" onclick="guildAction('quest')">📜 Guild Quest</button></div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h2>🔭 Social Tools</h2>
+<div class="actions"><button class="btn" onclick="viewProfile()">View Profile</button><button class="btn" onclick="shareAchievement()">Showcase Achievement</button><button class="btn good" onclick="welcomeWave()">👋 Welcome Wave</button></div>
+<p class="note">V71 remains local-only. Social activity is simulated on the device; there is no real-time chat, cash-out, wagering, or real-money social reward.</p>
+</section>
+</div>
+</div>
+<div class="footer">Pixel Champs V71 • Cosmic Social League • Local prototype save</div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY='pixelChampsV71';
+const defaultState={name:'Starbound Champ',title:'Cosmic Explorer',avatar:'🌠',level:1,xp:0,social:0,rep:0,friends:[],feed:[{icon:'🌌',text:'Welcome to the Cosmic Social League!',time:'Just now'}],achievements:[{icon:'🌟',name:'First Arrival',desc:'Entered the Social League'}],missions:{cheer:0,profile:0,post:0,challenge:0,wave:0},bonusDay:'',challengeDay:''};
+let s=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultState);
+const pool=[['Nova Ranger','🚀'],['Moon Sentinel','🌙'],['Solar Striker','☀️'],['Void Scout','🪐'],['Meteor Knight','☄️'],['Astral Mystic','🔮'],['Orbit Guardian','🛡️'],['Star Phoenix','🪽']];
+const divisions=[['🌟 Stardust',0],['🌙 Moonlight',150],['☀️ Solar',350],['🪐 Nebula',650],['👑 Celestial',1000]];
+function save(){localStorage.setItem(KEY,JSON.stringify(s));render()}
+function today(){return new Date().toISOString().slice(0,10)}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove('show'),1800)}
+function addFeed(icon,text){s.feed.unshift({icon,text,time:'Just now'});s.feed=s.feed.slice(0,8)}
+function addXP(n){s.xp+=n;while(s.level<5&&s.xp>=s.level*200){s.xp-=s.level*200;s.level++;s.social+=25;s.rep+=20;addFeed('⬆️',`Social Level ${s.level} reached! +25 Social`);if(s.level===2&&!s.achievements.some(a=>a.name==='Rising Star'))s.achievements.push({icon:'🚀',name:'Rising Star',desc:'Reached Social Level 2'});if(s.level===5&&!s.achievements.some(a=>a.name==='Celestial Social'))s.achievements.push({icon:'👑',name:'Celestial Social',desc:'Reached Social Level 5'})}}
+function addFriend(){if(s.friends.length>=7){toast('Friend list is full');return}const used=s.friends.map(x=>x.name);const item=pool.find(x=>!used.includes(x[0]));if(!item)return;s.friends.push({name:item[0],icon:item[1]});s.social+=5;s.rep+=5;addXP(15);s.missions.profile=Math.min(3,s.missions.profile+1);addFeed('🤝',`You added ${item[0]} to your cosmic network. +5 Social`);checkMissions();save();toast('Cosmic friend added!')}
+function removeFriend(i){const f=s.friends[i];s.friends.splice(i,1);addFeed('👋',`You removed ${f.name} from your friend list.`);save()}
+function cheerFriend(){if(!s.friends.length){toast('Add a friend first');return}s.social+=10;s.rep+=10;s.missions.cheer=Math.min(3,s.missions.cheer+1);addXP(10);const f=s.friends[Math.floor(Math.random()*s.friends.length)];addFeed('💜',`You sent a cosmic cheer to ${f.name}. +10 Social`);checkMissions();save()}
+function viewProfile(){s.social+=5;s.rep+=4;s.missions.profile=Math.min(3,s.missions.profile+1);addXP(8);addFeed('🔭','You explored a cosmic Champ profile. +5 Social');checkMissions();save()}
+function postActivity(){s.social+=5;s.rep+=5;s.missions.post=1;addXP(12);addFeed('📡','You posted a new cosmic activity update. +5 Social');checkMissions();save()}
+function shareAchievement(){s.social+=8;s.rep+=6;addXP(10);addFeed('🏅','You showcased an achievement to your cosmic network. +8 Social');save()}
+function welcomeWave(){if(!s.friends.length){toast('Add a friend first');return}s.social+=7;s.rep+=7;s.missions.wave=1;addXP(10);addFeed('👋','You sent a welcome wave to your network. +7 Social');checkMissions();save()}
+function leagueChallenge(){s.social+=15;s.rep+=20;s.missions.challenge=Math.min(3,s.missions.challenge+1);addXP(35);addFeed('⚡','You completed a friendly League Challenge. +35 XP');checkMissions();save();toast('League progress recorded!')}
+function claimLeagueBonus(){const d=today();if(s.bonusDay===d){toast('Daily bonus already claimed');return}s.bonusDay=d;s.social+=20;s.rep+=15;addXP(20);addFeed('🎁','Daily League Bonus claimed. +20 Social');save();toast('Daily bonus claimed!')}
+function guildAction(type){if(type==='battle'){s.social+=5;s.rep+=5;addXP(18);addFeed('⚔️','Your guild completed a friendly battle snapshot.')}else{s.social+=5;s.rep+=5;addXP(22);addFeed('📜','Your guild completed a quest snapshot.')}save();toast('Guild progress recorded!')}
+function editProfile(){const n=prompt('Choose your display name:',s.name);if(n&&n.trim()){s.name=n.trim().slice(0,24);const t=prompt('Choose your title:',s.title);if(t&&t.trim())s.title=t.trim().slice(0,28);addFeed('✏️','You updated your cosmic profile.');save()}}
+function checkMissions(){const done=[];if(s.missions.cheer>=3)done.push(['Social Spark','💜','Cheered 3 friends']);if(s.missions.profile>=3)done.push(['Star Observer','🔭','Viewed 3 profiles']);if(s.missions.post>=1)done.push(['Signal Flare','📡','Posted a cosmic activity']);if(s.missions.challenge>=3)done.push(['League Runner','⚡','Completed 3 League Challenges']);if(s.missions.wave>=1)done.push(['Welcome Beacon','👋','Sent a Welcome Wave']);done.forEach(a=>{if(!s.achievements.some(x=>x.name===a[0])){s.achievements.push({icon:a[1],name:a[0],desc:a[2]});s.social+=30;s.rep+=25;addXP(25);toast(`${a[0]} unlocked! +30 Social`)}})}
+function render(){document.getElementById('name').textContent=s.name;document.getElementById('title').textContent=s.title;document.getElementById('avatar').textContent=s.avatar;document.getElementById('level').textContent=s.level;document.getElementById('level2').textContent=s.level;document.getElementById('xp').textContent=s.xp;document.getElementById('social').textContent=s.social;document.getElementById('rep').textContent=s.rep;document.getElementById('friendCount').textContent=s.friends.length;document.getElementById('friends').innerHTML=s.friends.length?s.friends.map((f,i)=>`<div class="row"><div class="left"><div class="mini">${f.icon}</div><div><b>${f.name}</b><div class="note">Online <span class="online"></span></div></div></div><button class="btn" onclick="removeFriend(${i})">Remove</button></div>`).join(''):'<div class="note">No cosmic friends yet. Add one to start building your network.</div>';document.getElementById('feed').innerHTML=s.feed.map(p=>`<div class="post"><span style="font-size:21px;margin-right:7px">${p.icon}</span>${p.text}<br><small>${p.time}</small></div>`).join('');document.getElementById('achievements').innerHTML=s.achievements.map(a=>`<div class="achievement"><div class="badge">${a.icon}</div><div><b>${a.name}</b><div class="note">${a.desc}</div></div></div>`).join('');const ms=[['cheer','💜 Cheer 3 friends',3],['profile','🔭 Explore 3 profiles',3],['post','📡 Post 1 activity',1],['challenge','⚡ Complete 3 League Challenges',3],['wave','👋 Send 1 Welcome Wave',1]];document.getElementById('missions').innerHTML=ms.map(m=>{const p=Math.min(m[2],s.missions[m[0]]);return `<div class="mission"><div><b>${m[1]}</b><div class="progress"><div class="bar" style="width:${p/m[2]*100}%"></div></div></div><div style="text-align:right;font-weight:800">${p}/${m[2]}</div></div>`}).join('');const total=s.level<5?s.level*200:1000;const div=divisions.reduce((a,d)=>s.social>=d[1]?d:a,divisions[0]);const next=divisions.find(d=>d[1]>s.social);document.getElementById('division').textContent=div[0];document.getElementById('divisionMeta').textContent=next?`${Math.max(0,next[1]-s.social)} Social Points to next division`:'Top division reached';const start=div[1],end=next?next[1]:Math.max(start+1,social+1);document.getElementById('leagueBar').style.width=Math.min(100,Math.max(0,(s.social-start)/(end-start)*100))+'%';document.getElementById('guildMeta').textContent=`Guild Level 1 • ${Math.min(8,s.friends.length+1)}/8 members`}
+render();
+</script>
+</body>
+</html>

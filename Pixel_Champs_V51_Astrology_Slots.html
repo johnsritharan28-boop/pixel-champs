@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pixel Champs — Zodiac Spin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 10%,#40206b,transparent 32%),radial-gradient(circle at 85% 20%,#174d68,transparent 30%),#070a18;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;align-items:center}.app{width:min(430px,96vw);padding:18px}.panel{background:rgba(10,13,35,.94);border:1px solid #444b91;border-radius:28px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.55)}.badge{display:inline-block;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);padding:7px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.8px}.hero{text-align:center}.hero h1{font-size:36px;margin:10px 0 5px}.hero p{margin:0;opacity:.75}.balance{display:flex;justify-content:space-between;margin:18px 0 12px;gap:8px}.stat{flex:1;background:#151a3c;border:1px solid #343b76;border-radius:16px;padding:11px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:10px;opacity:.6;text-transform:uppercase}.machine{background:linear-gradient(145deg,#11072c,#2c0c4d,#100723);border:2px solid #dca83c;border-radius:24px;padding:14px;box-shadow:0 0 0 3px rgba(139,92,246,.18),0 20px 45px rgba(0,0,0,.4)}.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#05030c;border:2px solid #8b5cf6;border-radius:18px;padding:9px}.reel{height:104px;border-radius:13px;background:linear-gradient(#fff,#e0e3ed);color:#17162b;display:flex;align-items:center;justify-content:center;font-size:47px;box-shadow:inset 0 0 0 3px #74798c}.spinning .reel{animation:shake .12s linear infinite}.meter{margin-top:10px;text-align:center;padding:10px;border-radius:14px;background:#251047;border:1px solid rgba(255,211,78,.3);font-size:11px;text-transform:uppercase;font-weight:900}.meter b{display:block;color:#ffd34e;font-size:21px}.status{text-align:center;min-height:28px;margin:13px 0;font-weight:900}.zodiac{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0}.zodiac button,.spin{border:1px solid #3c457f;background:#171d45;color:#fff;border-radius:13px;padding:10px 5px;font-weight:850;cursor:pointer}.zodiac button.active{background:linear-gradient(145deg,#9b5cff,#6428c7);border-color:#ead7ff;box-shadow:0 0 18px rgba(168,85,247,.5)}.zodiac small{display:block;opacity:.6;font-size:9px;margin-top:2px}.spin{width:100%;font-size:21px;padding:16px;background:linear-gradient(135deg,#ffe36b,#ffb51e,#ff681a);color:#24132d;border:0;box-shadow:0 12px 28px rgba(245,158,11,.3)}.spin:disabled{opacity:.45;cursor:not-allowed}.note{text-align:center;font-size:10px;opacity:.55;margin-top:12px;line-height:1.4}@keyframes shake{0%{transform:translateY(-7px)}50%{transform:translateY(7px)}100%{transform:translateY(-7px)}}
+</style>
+</head>
+<body><div class="app"><section class="panel">
+<div class="hero"><span class="badge">PIXEL CHAMPS • ZODIAC SPIN</span><h1>🌙 Zodiac Spin</h1><p>Choose your sign. Spin for a Pixel Champs bonus.</p></div>
+<div class="balance"><div class="stat"><b id="stars">250</b><span>Star Dust</span></div><div class="stat"><b id="free">1</b><span>Free Spin</span></div><div class="stat"><b id="streak">0</b><span>Streak</span></div></div>
+<div class="machine" id="machine"><div class="reels"><div class="reel" id="r1">♈</div><div class="reel" id="r2">♌</div><div class="reel" id="r3">♓</div></div><div class="meter">Zodiac jackpot meter<b id="jackpot">7,777</b></div></div>
+<div class="status" id="status">Pick your zodiac sign</div>
+<div class="zodiac" id="zodiac"></div>
+<button class="spin" id="spin">✨ SPIN</button>
+<div class="note">Virtual rewards only. No cash prizes. This prototype keeps the feature separate from real-money gambling mechanics.</div>
+</section></div>
+<script>
+const signs=[['♈','Aries'],['♉','Taurus'],['♊','Gemini'],['♋','Cancer'],['♌','Leo'],['♍','Virgo'],['♎','Libra'],['♏','Scorpio'],['♐','Sagittarius'],['♑','Capricorn'],['♒','Aquarius'],['♓','Pisces']];
+const rewards=[25,40,60,75,100,125,150,175,250,300,500,777];
+const els={stars:document.getElementById('stars'),free:document.getElementById('free'),streak:document.getElementById('streak'),status:document.getElementById('status'),spin:document.getElementById('spin'),machine:document.getElementById('machine'),jackpot:document.getElementById('jackpot')};
+let selected=null,spins=1,stars=250,streak=0;
+const buttons=[];
+signs.forEach((s,i)=>{const b=document.createElement('button');b.innerHTML=`${s[0]}<small>${s[1]}</small>`;b.onclick=()=>{selected=i;buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');els.status.textContent=`${s[1]} is aligned ✨`;};buttons.push(b);document.getElementById('zodiac').appendChild(b)});
+function sync(){els.stars.textContent=stars.toLocaleString();els.free.textContent=spins;els.streak.textContent=streak;els.spin.disabled=spins<1||selected===null;}
+function spin(){if(spins<1||selected===null)return;spins--;streak++;sync();els.machine.classList.add('spinning');els.status.textContent='Reading the stars…';let ticks=0;const timer=setInterval(()=>{[r1,r2,r3].forEach((r,j)=>r.textContent=signs[Math.floor(Math.random()*signs.length)][0]);ticks++;if(ticks>=15){clearInterval(timer);els.machine.classList.remove('spinning');const win=rewards[Math.floor(Math.random()*rewards.length)];stars+=win;if(win>=500){els.status.textContent=`🌟 COSMIC JACKPOT! +${win} Star Dust`;els.jackpot.textContent=(7777+win).toLocaleString()}else{els.status.textContent=`${signs[selected][1]} bonus: +${win} Star Dust`;}sync();}}},90)}
+els.spin.onclick=spin;sync();
+</script></body></html>
