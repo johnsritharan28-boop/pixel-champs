@@ -1,12 +1,6 @@
 (() => {
-  const frame = document.querySelector('.game');
-  if (!frame) return;
-
-  frame.addEventListener('load', () => {
-    const w = frame.contentWindow;
-    const d = frame.contentDocument;
-    if (!w || !d || !w.s) return;
-
+  const w=window;
+    const d=document;
     const key = 'pixelChampsQuestsV88';
     const day = () => { const x = new Date(); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`; };
     let data = null;
@@ -72,5 +66,4 @@
     const title = d.querySelector('title');
     if (title) title.textContent = 'Pixel Champs V88 — Cosmic Universe';
     w.render();
-  });
 })();
