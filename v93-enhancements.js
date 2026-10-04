@@ -1,5 +1,9 @@
 (() => {
   const w=window,d=document;
+  // V93/V94 state bridge: the core app declares `s` with top-level `let`,
+  // which is intentionally not a window property. Older enhancement modules
+  // use window.s, so expose the SAME live object instead of a copy.
+  if (typeof s !== 'undefined') w.s=s;
   if(!d.body)return;
   d.documentElement.style.touchAction='manipulation';
   d.body.style.touchAction='manipulation';
@@ -46,7 +50,6 @@
       const el=actionable(e.target);
       if(!el||!synthetic.has(el))return;
       if(syntheticDispatch)return;
-      // WebKit's native click after our touch fallback would fire the action a second time.
       synthetic.delete(el);
       e.preventDefault();
       e.stopImmediatePropagation();
