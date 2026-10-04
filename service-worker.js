@@ -1,4 +1,4 @@
-const CACHE='pixel-champs-v100';
+const CACHE='pixel-champs-v101';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./v80-enhancements.js?v=100','./v81-enhancements.js?v=100','./v82-enhancements.js?v=100','./v83-enhancements.js?v=100','./v84-enhancements.js?v=100','./v85-enhancements.js?v=100','./v86-enhancements.js?v=100','./v87-enhancements.js?v=100','./v88-enhancements.js?v=100','./v89-enhancements.js?v=100','./v90-enhancements.js?v=100','./v91-enhancements.js?v=100','./v92-enhancements.js?v=100','./v93-enhancements.js?v=100'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
