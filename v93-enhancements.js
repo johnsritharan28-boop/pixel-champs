@@ -11,11 +11,59 @@
   style.textContent='html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button,.tile,[onclick]{touch-action:manipulation;-webkit-user-select:none;user-select:none}button:disabled{opacity:.55}';
   d.head.appendChild(style);
 
-  // Native iOS buttons already use direct DOM onclick handlers.
-  // Do not synthesize a second tap; duplicate touch/click bridges were causing
-  // intermittent double-activation and swallowed navigation on WebKit.
-  if (d.documentElement) d.documentElement.style.touchAction='manipulation';
-  if (d.body) d.body.style.touchAction='manipulation';
+  // iOS/WKWebView tap safety net. Native click remains the primary path.
+  // If a touch release does NOT produce a native click, wait briefly and
+  // activate the same DOM element once. This is deliberately delayed so a
+  // normal WebKit click can arrive first; the old immediate synthetic bridge
+  // could double-fire actions and swallow navigation.
+  if(!w.__pcDelayedTapFallbackInstalled){
+    w.__pcDelayedTapFallbackInstalled=true;
+    const pending=new WeakMap(),synthetic=new WeakSet();
+    const actionable=target=>{
+      if(!target||!target.closest)return null;
+      const el=target.closest('button,[onclick],.tile');
+      if(!el||el.disabled)return null;
+      return el;
+    };
+    const clear=el=>{
+      const timer=pending.get(el);
+      if(timer){clearTimeout(timer);pending.delete(el);}
+    };
+    d.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='touch')return;
+      const el=actionable(e.target);
+      if(el)clear(el);
+    },true);
+    d.addEventListener('pointerup',e=>{
+      if(e.pointerType!=='touch')return;
+      const el=actionable(e.target);
+      if(!el)return;
+      clear(el);
+      const x=e.clientX,y=e.clientY;
+      const timer=setTimeout(()=>{
+        pending.delete(el);
+        if(!el.isConnected||el.disabled)return;
+        // A substantial move means this was a gesture/scroll, not a tap.
+        const r=el.getBoundingClientRect();
+        if(x<r.left-12||x>r.right+12||y<r.top-12||y>r.bottom+12)return;
+        synthetic.add(el);
+        try{el.click();}finally{synthetic.delete(el);}
+      },90);
+      pending.set(el,timer);
+    },true);
+    d.addEventListener('pointercancel',e=>{
+      if(e.pointerType!=='touch')return;
+      const el=actionable(e.target);
+      if(el)clear(el);
+    },true);
+    d.addEventListener('click',e=>{
+      const el=actionable(e.target);
+      if(el)clear(el);
+      // Never block the native or fallback click. This listener only cancels
+      // the delayed timer when WebKit has already delivered the real click.
+      if(el&&synthetic.has(el))synthetic.delete(el);
+    },true);
+  }
 
   if(d.querySelector('[data-v93-battle]'))return;
   let playerHP=120,battleLocked=false;
