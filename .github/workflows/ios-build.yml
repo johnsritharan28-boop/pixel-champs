@@ -1,15 +1,12 @@
 name: Pixel Champs iOS Build Validation
 
+# IMPORTANT: iOS/TestFlight uploads are manual release actions.
+# Do not upload a new TestFlight build on every source-code commit.
 on:
-  push:
-    branches:
-      - main
-      - v80-ios-foundation
-      - v93-battle-system
   workflow_dispatch:
 
 concurrency:
-  group: pixel-champs-ios-${{ github.ref }}
+  group: pixel-champs-ios-manual
   cancel-in-progress: true
 
 permissions:
