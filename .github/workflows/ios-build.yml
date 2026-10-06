@@ -1,9 +1,12 @@
 name: Pixel Champs iOS Build Validation
 
-# IMPORTANT: iOS/TestFlight uploads are manual release actions.
-# Do not upload a new TestFlight build on every source-code commit.
+# iOS/TestFlight uploads are release actions. Normal source commits do not trigger them.
+# Updating the explicit release marker below triggers one release build.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/ios-release-trigger
 
 concurrency:
   group: pixel-champs-ios-manual
