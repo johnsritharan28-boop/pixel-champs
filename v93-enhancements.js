@@ -1,8 +1,6 @@
 (() => {
   const w=window,d=document;
-  // V93/V94 state bridge: the core app declares `s` with top-level `let`,
-  // which is intentionally not a window property. Older enhancement modules
-  // use window.s, so expose the SAME live object instead of a copy.
+  // V95 touch bridge: expose the live core state object to legacy enhancement modules.
   if (typeof s !== 'undefined') w.s=s;
   if(!d.body)return;
   d.documentElement.style.touchAction='manipulation';
@@ -11,14 +9,13 @@
   style.textContent='html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button,.tile,[onclick]{touch-action:manipulation;-webkit-user-select:none;user-select:none}button:disabled{opacity:.55}';
   d.head.appendChild(style);
 
-  // iOS/WKWebView tap safety net. Native click remains the primary path.
-  // If a touch release does NOT produce a native click, wait briefly and
-  // activate the same DOM element once. This is deliberately delayed so a
-  // normal WebKit click can arrive first; the old immediate synthetic bridge
-  // could double-fire actions and swallow navigation.
-  if(!w.__pcDelayedTapFallbackInstalled){
-    w.__pcDelayedTapFallbackInstalled=true;
-    const pending=new WeakMap(),synthetic=new WeakSet();
+  // iOS/WKWebView tap safety net.
+  // Important: never allow the native WebKit click AND the fallback click to
+  // activate the same control. V94/V95 could occasionally double-fire a tap
+  // when WebKit delivered its compatibility click after the fallback timer.
+  if(!w.__pcTapBridgeV95Installed){
+    w.__pcTapBridgeV95Installed=true;
+    const pending=new WeakMap(),starts=new WeakMap(),suppressNative=new WeakMap(),synthetic=new WeakSet();
     const actionable=target=>{
       if(!target||!target.closest)return null;
       const el=target.closest('button,[onclick],.tile');
@@ -32,36 +29,53 @@
     d.addEventListener('pointerdown',e=>{
       if(e.pointerType!=='touch')return;
       const el=actionable(e.target);
-      if(el)clear(el);
+      if(!el)return;
+      clear(el);
+      starts.set(el,{x:e.clientX,y:e.clientY});
+    },true);
+    d.addEventListener('pointermove',e=>{
+      if(e.pointerType!=='touch')return;
+      const el=actionable(e.target);
+      if(!el)return;
+      const p=starts.get(el);
+      if(!p)return;
+      if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>12)clear(el);
     },true);
     d.addEventListener('pointerup',e=>{
       if(e.pointerType!=='touch')return;
       const el=actionable(e.target);
       if(!el)return;
+      const p=starts.get(el);
+      starts.delete(el);
       clear(el);
-      const x=e.clientX,y=e.clientY;
+      if(!p||Math.hypot(e.clientX-p.x,e.clientY-p.y)>12)return;
       const timer=setTimeout(()=>{
         pending.delete(el);
         if(!el.isConnected||el.disabled)return;
-        // A substantial move means this was a gesture/scroll, not a tap.
-        const r=el.getBoundingClientRect();
-        if(x<r.left-12||x>r.right+12||y<r.top-12||y>r.bottom+12)return;
+        suppressNative.set(el,Date.now()+700);
         synthetic.add(el);
         try{el.click();}finally{synthetic.delete(el);}
-      },90);
+      },120);
       pending.set(el,timer);
     },true);
     d.addEventListener('pointercancel',e=>{
       if(e.pointerType!=='touch')return;
       const el=actionable(e.target);
-      if(el)clear(el);
+      if(el){starts.delete(el);clear(el);}
     },true);
     d.addEventListener('click',e=>{
       const el=actionable(e.target);
-      if(el)clear(el);
-      // Never block the native or fallback click. This listener only cancels
-      // the delayed timer when WebKit has already delivered the real click.
-      if(el&&synthetic.has(el))synthetic.delete(el);
+      if(!el)return;
+      if(synthetic.has(el))return;
+      const until=suppressNative.get(el);
+      if(until&&Date.now()<until){
+        suppressNative.delete(el);
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+      suppressNative.delete(el);
+      clear(el);
     },true);
   }
 
@@ -83,5 +97,5 @@
   w.attack=n=>{if(battleLocked||playerHP<=0){w.toast?.('Start a new fight');return;}originalAttack(n);const rem=enemyHP();if(rem===0){battleLocked=true;render();return;}const dmg=8+Math.floor(Math.random()*9);playerHP=Math.max(0,playerHP-dmg);writeLog('👾 Void Warden hits Nova Vanguard for '+dmg+' damage.');render();if(playerHP===0){battleLocked=true;writeLog('💫 Nova Vanguard was defeated. Tap New Fight to try again.');w.toast?.('Nova Vanguard was defeated');}};
   w.newFight=()=>{originalNewFight();playerHP=120;battleLocked=false;render();writeLog('❤️ Nova Vanguard returns with full HP.');};
   render();
-  writeLog('⚔️ V93 Battle System ready — 120 HP each.');
+  writeLog('⚔️ V95 Battle System ready — 120 HP each.');
 })();
