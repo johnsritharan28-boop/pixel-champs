@@ -27,6 +27,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Stamp iOS build version into web UI
+        env:
+          IOS_BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          build = os.environ['IOS_BUILD_NUMBER']
+          p = Path('index.html')
+          text = p.read_text()
+          text = text.replace('V94', f'V{build}')
+          p.write_text(text)
+          PY
+
       - name: Prepare Capacitor web assets
         run: |
           rm -rf ios www
