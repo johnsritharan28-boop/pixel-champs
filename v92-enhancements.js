@@ -1,6 +1,7 @@
 (() => {
   const w = window;
   const d = document;
+  const version = w.PIXEL_CHAMPS_UI_VERSION || 'V94';
   const home = d.querySelector('#home');
   if (!home) return;
 
@@ -85,6 +86,6 @@
   save();
 
   const title = d.querySelector('title');
-  if (title) title.textContent = 'Pixel Champs V93 — Cosmic Universe';
+  if (title) title.textContent = `Pixel Champs ${version} — Cosmic Universe`;
   if (typeof w.render === 'function') w.render();
 })();
