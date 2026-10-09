@@ -9,76 +9,9 @@
   style.textContent='html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button,.tile,[onclick]{touch-action:manipulation;-webkit-user-select:none;user-select:none}button:disabled{opacity:.55}';
   d.head.appendChild(style);
 
-  // iOS/WKWebView tap safety net.
-  // Important: never allow the native WebKit click AND the fallback click to
-  // activate the same control. V94/V95 could occasionally double-fire a tap
-  // when WebKit delivered its compatibility click after the fallback timer.
-  if(!w.__pcTapBridgeV95Installed){
-    w.__pcTapBridgeV95Installed=true;
-    const pending=new WeakMap(),starts=new WeakMap(),suppressNative=new WeakMap(),synthetic=new WeakSet();
-    const actionable=target=>{
-      if(!target||!target.closest)return null;
-      const el=target.closest('button,[onclick],.tile');
-      if(!el||el.disabled)return null;
-      return el;
-    };
-    const clear=el=>{
-      const timer=pending.get(el);
-      if(timer){clearTimeout(timer);pending.delete(el);}
-    };
-    d.addEventListener('pointerdown',e=>{
-      if(e.pointerType!=='touch')return;
-      const el=actionable(e.target);
-      if(!el)return;
-      clear(el);
-      starts.set(el,{x:e.clientX,y:e.clientY});
-    },true);
-    d.addEventListener('pointermove',e=>{
-      if(e.pointerType!=='touch')return;
-      const el=actionable(e.target);
-      if(!el)return;
-      const p=starts.get(el);
-      if(!p)return;
-      if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>12)clear(el);
-    },true);
-    d.addEventListener('pointerup',e=>{
-      if(e.pointerType!=='touch')return;
-      const el=actionable(e.target);
-      if(!el)return;
-      const p=starts.get(el);
-      starts.delete(el);
-      clear(el);
-      if(!p||Math.hypot(e.clientX-p.x,e.clientY-p.y)>12)return;
-      const timer=setTimeout(()=>{
-        pending.delete(el);
-        if(!el.isConnected||el.disabled)return;
-        suppressNative.set(el,Date.now()+700);
-        synthetic.add(el);
-        try{el.click();}finally{synthetic.delete(el);}
-      },120);
-      pending.set(el,timer);
-    },true);
-    d.addEventListener('pointercancel',e=>{
-      if(e.pointerType!=='touch')return;
-      const el=actionable(e.target);
-      if(el){starts.delete(el);clear(el);}
-    },true);
-    d.addEventListener('click',e=>{
-      const el=actionable(e.target);
-      if(!el)return;
-      if(synthetic.has(el))return;
-      const until=suppressNative.get(el);
-      if(until&&Date.now()<until){
-        suppressNative.delete(el);
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        return;
-      }
-      suppressNative.delete(el);
-      clear(el);
-    },true);
-  }
-
+  // Test branch: preserve native WebKit clicks only. The synthetic tap fallback
+  // is intentionally omitted here so we can isolate whether it suppresses taps.
+  // Core button handlers and the V93 battle logic below are unchanged.
   if(d.querySelector('[data-v93-battle]'))return;
   let playerHP=120,battleLocked=false;
   const battle=d.querySelector('#battle'),enemyText=d.querySelector('#enemyText'),logBox=d.querySelector('#battleLog');
